@@ -17,10 +17,12 @@ import java.util.Arrays;
 public class Main {
     
     private static boolean newCDR = false;
+    private static boolean checking = true;
+    
     private static boolean checkIfNotEmpty(String dir_name) {
         File directory = new File(dir_name);
         File[] files_arr = directory.listFiles();
-        if (files_arr.length == 0) {
+        if(files_arr.length == 0) {
             return false;
         } else {
             return true;
@@ -33,12 +35,16 @@ public class Main {
         Path folder_path = Paths.get(p.getParent() + "/CDRs/");
         System.out.println(folder_path);
 
-        while (true) {
+        while (checking) {
             boolean check = checkIfNotEmpty(folder_path.toString());
             if (check == true) {
                   newCDR = true;
-
+                  break;
             }
+        }
+        if(newCDR == true){
+           System.out.println("new CDR uploaded");
+        
         }
     }
 }
