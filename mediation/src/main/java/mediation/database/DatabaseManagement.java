@@ -49,8 +49,7 @@ public class DatabaseManagement {
             int rows = pst.executeUpdate();
             pst.close();
             System.out.print(rows);
-//            pst.close();
-//            rs.close();
+
         } catch (SQLException e) {
            System.out.println(e.getMessage());
         } finally {

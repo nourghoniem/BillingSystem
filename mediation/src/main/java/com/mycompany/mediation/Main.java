@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +17,6 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import mediation.model.CDR;
 
 /**
@@ -60,42 +58,42 @@ public class Main {
             boolean check = checkIfNotEmpty(folder_path.toString());
             if (check == true) {
                 newCDR = true;
-                break;
-            }
-        }
-        if (newCDR == true) {
-            System.out.println("new CDR uploaded");
-            File my_cdr = getCDR(folder_path.toString());
+                if (newCDR == true) {
+                    System.out.println("new CDR uploaded");
+                    File my_cdr = getCDR(folder_path.toString());
 
-            if (my_cdr != null) {
-                String[] columns;
-                DatabaseManagement data = new DatabaseManagement();
-                BufferedReader in = new BufferedReader(new FileReader(my_cdr));
-                String line;
-                while ((line = in.readLine()) != null) {
-                    columns = line.split(",");
+                    if (my_cdr != null) {
+                        String[] columns;
+                        DatabaseManagement data = new DatabaseManagement();
+                        BufferedReader in = new BufferedReader(new FileReader(my_cdr));
+                        String line;
+                        while ((line = in.readLine()) != null) {
+                            columns = line.split(",");
 //                   for(String c : columns){
 //                      System.out.println(c);
 //                   }
 
+                            int service_id = Integer.parseInt(columns[2]);
+                            int rateplan_id = Integer.parseInt(columns[3]);
+                            LocalDate date = LocalDate.parse(columns[4]);
+                            LocalTime time = LocalTime.parse(columns[5]);
+                            time.truncatedTo(ChronoUnit.SECONDS);
+                            CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, date, time);
+                            data.insertCDR(cdr);
+                        }
 
-                    int service_id = Integer.parseInt(columns[2]);
-                    int rateplan_id = Integer.parseInt(columns[3]);
-                    LocalDate date = LocalDate.parse(columns[4]);
-                    LocalTime time = LocalTime.parse(columns[5]);
-                    time.truncatedTo(ChronoUnit.SECONDS);
-                    CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, date, time);
-                    data.insertCDR(cdr);
+                        in.close();
+                        Path origin_folder = Paths.get(folder_path.toString(), my_cdr.getName());
+                        Files.move(origin_folder, dest_folder.resolve(my_cdr.getName()), StandardCopyOption.REPLACE_EXISTING);
+
+                    } else {
+                        System.out.println("Please archive unneeded CDRs first");
+                        break;
+
+                    }
                 }
-
-                in.close();
-                Path origin_folder = Paths.get(folder_path.toString(), my_cdr.getName());
-                Files.move(origin_folder, dest_folder.resolve(my_cdr.getName()), StandardCopyOption.REPLACE_EXISTING);
-
-            } else {
-                System.out.println("Please archive unneeded CDRs first");
-
             }
         }
+
     }
 }
