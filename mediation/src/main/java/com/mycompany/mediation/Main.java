@@ -10,8 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import mediation.model.CDR;
 
@@ -49,6 +51,8 @@ public class Main {
         Path p = Paths.get(path);
         Path folder_path = Paths.get(p.getParent() + "/CDRs/");
         Path dest_folder = Paths.get(p.getParent() + "/Archived_CDRs/");
+       
+                
 //        System.out.println(folder_path);
 //        System.out.println(dest_folder);
 
@@ -72,16 +76,18 @@ public class Main {
 //                   for(String c : columns){
 //                      System.out.println(c);
 //                   }
-                   System.out.println(columns[2]);
+//                   System.out.println(columns[2]);
                
-//                   int service_id = Integer.parseInt(columns[2]);
-//                   int rateplan_id = Integer.parseInt(columns[3]);
-//                   CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, columns[4], columns[5]);
-//                   DatabaseManagement data = new DatabaseManagement();
-//                   data.insertCDR(cdr);
+                   int service_id = Integer.parseInt(columns[2]);
+                   int rateplan_id = Integer.parseInt(columns[3]);
+                   CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, columns[4], columns[5]);
+                   DatabaseManagement data = new DatabaseManagement();
+                   data.insertCDR(cdr);
                 }
             
                 in.close();
+                Path origin_folder = Paths.get(folder_path.toString(), my_cdr.getName());
+                Files.move(origin_folder, dest_folder.resolve(my_cdr.getName()), StandardCopyOption.REPLACE_EXISTING);
                 
             }else{
                System.out.println("Please archive unneeded CDRs first");
