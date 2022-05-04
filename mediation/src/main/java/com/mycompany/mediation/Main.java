@@ -4,6 +4,7 @@
  */
 package com.mycompany.mediation;
 
+import mediation.database.DatabaseManagement;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import mediation.model.CDR;
 
@@ -51,10 +55,6 @@ public class Main {
         Path p = Paths.get(path);
         Path folder_path = Paths.get(p.getParent() + "/CDRs/");
         Path dest_folder = Paths.get(p.getParent() + "/Archived_CDRs/");
-       
-                
-//        System.out.println(folder_path);
-//        System.out.println(dest_folder);
 
         while (checking) {
             boolean check = checkIfNotEmpty(folder_path.toString());
@@ -66,32 +66,35 @@ public class Main {
         if (newCDR == true) {
             System.out.println("new CDR uploaded");
             File my_cdr = getCDR(folder_path.toString());
-           
-            if(my_cdr != null){
+
+            if (my_cdr != null) {
                 String[] columns;
+                DatabaseManagement data = new DatabaseManagement();
                 BufferedReader in = new BufferedReader(new FileReader(my_cdr));
                 String line;
-                while((line = in.readLine()) != null){
-                   columns = line.split(",");
+                while ((line = in.readLine()) != null) {
+                    columns = line.split(",");
 //                   for(String c : columns){
 //                      System.out.println(c);
 //                   }
-//                   System.out.println(columns[2]);
-               
-                   int service_id = Integer.parseInt(columns[2]);
-                   int rateplan_id = Integer.parseInt(columns[3]);
-                   CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, columns[4], columns[5]);
-                   DatabaseManagement data = new DatabaseManagement();
-                   data.insertCDR(cdr);
+
+
+                    int service_id = Integer.parseInt(columns[2]);
+                    int rateplan_id = Integer.parseInt(columns[3]);
+                    LocalDate date = LocalDate.parse(columns[4]);
+                    LocalTime time = LocalTime.parse(columns[5]);
+                    time.truncatedTo(ChronoUnit.SECONDS);
+                    CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, date, time);
+                    data.insertCDR(cdr);
                 }
-            
+
                 in.close();
                 Path origin_folder = Paths.get(folder_path.toString(), my_cdr.getName());
                 Files.move(origin_folder, dest_folder.resolve(my_cdr.getName()), StandardCopyOption.REPLACE_EXISTING);
-                
-            }else{
-               System.out.println("Please archive unneeded CDRs first");
-            
+
+            } else {
+                System.out.println("Please archive unneeded CDRs first");
+
             }
         }
     }

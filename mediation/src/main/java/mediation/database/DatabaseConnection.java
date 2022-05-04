@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.mediation;
+package mediation.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,7 +27,7 @@ public class DatabaseConnection {
             con = DriverManager.getConnection("jdbc:postgresql://bkaxb3w5rvjztkre1shf-postgresql.services.clever-cloud.com:5432/bkaxb3w5rvjztkre1shf", "uiivnrlitesybgtcbqso", "3u6dKo3lOPgPz5gGGWCX");
             System.out.println("database connected");
         } catch (Exception ex) {
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+    
             System.out.println("exception at database connection" + ex);
         }
     }
