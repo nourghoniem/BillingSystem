@@ -68,17 +68,14 @@ public class Main {
                         BufferedReader in = new BufferedReader(new FileReader(my_cdr));
                         String line;
                         while ((line = in.readLine()) != null) {
-                            columns = line.split(",");
-//                   for(String c : columns){
-//                      System.out.println(c);
-//                   }
-
+                            columns = line.split(",");   
                             int service_id = Integer.parseInt(columns[2]);
                             int rateplan_id = Integer.parseInt(columns[3]);
-                            LocalDate date = LocalDate.parse(columns[4]);
-                            LocalTime time = LocalTime.parse(columns[5]);
+                            int usage =  Integer.parseInt(columns[4]);
+                            LocalDate date = LocalDate.parse(columns[5]);
+                            LocalTime time = LocalTime.parse(columns[6]);
                             time.truncatedTo(ChronoUnit.SECONDS);
-                            CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, date, time);
+                            CDR cdr = new CDR(columns[0], columns[1], service_id, rateplan_id, usage, date, time);
                             data.insertCDR(cdr);
                         }
 

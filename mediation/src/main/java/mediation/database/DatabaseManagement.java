@@ -39,13 +39,14 @@ public class DatabaseManagement {
             Date date = Date.from(cdr.getStart_date().atStartOfDay(ZoneId.systemDefault()).toInstant());
             Time time = Time.valueOf( cdr.getStart_time() );
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-            pst = conn.prepareStatement("INSERT INTO cdrs(msisdn, dial_b, service_id, rateplan_id, start_date, start_time) VALUES(?,?,?,?,?,?);");
+            pst = conn.prepareStatement("INSERT INTO rating(msisdn, dial_b, service_id, rateplan_id, start_date, start_time, usage) VALUES(?,?,?,?,?,?,?);");
             pst.setString(1, cdr.getMsisdn());
             pst.setString(2, cdr.getDial_b());
             pst.setInt(3, cdr.getService_id());
             pst.setInt(4, cdr.getRateplan_id());
             pst.setDate(5, sqlDate);
             pst.setTime(6, time);
+            pst.setInt(7, cdr.getUsage());
             int rows = pst.executeUpdate();
             pst.close();
             System.out.print(rows);

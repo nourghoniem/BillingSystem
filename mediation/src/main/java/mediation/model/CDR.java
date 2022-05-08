@@ -17,16 +17,18 @@ public class CDR {
     private String dial_b;
     private int service_id;
     private int rateplan_id;
+    private int usage;
     private LocalDate start_date;
     private LocalTime start_time;
     
     public CDR() {}
 
-    public CDR(String msisdn, String dial_b, int service_id, int rateplan_id, LocalDate start_date, LocalTime start_time) {
+    public CDR(String msisdn, String dial_b, int service_id, int rateplan_id, int usage, LocalDate start_date, LocalTime start_time) {
         this.msisdn = msisdn;
         this.dial_b = dial_b;
         this.service_id = service_id;
         this.rateplan_id = rateplan_id;
+        this.usage = usage;
         this.start_date = start_date;
         this.start_time = start_time;
     }
@@ -78,4 +80,13 @@ public class CDR {
     public void setStart_time(LocalTime start_time) {
         this.start_time = start_time;
     }
+
+    public int getUsage() {
+        return usage;
+    }
+
+    public void setUsage(int usage) {
+        this.usage = usage;
+    }
+    
 }
