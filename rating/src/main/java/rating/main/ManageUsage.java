@@ -33,7 +33,8 @@ public class ManageUsage {
                         if (dial_b.substring(1).startsWith("1")) {
                             rating.setVoice_onnet(c.getUsage());
                         } else {
-                            System.out.println("cross-net");
+          
+                            rating.setVoice_crossnet(c.getUsage());
                         }
                     } else { 
                         rating.setVoice_international(c.getUsage());
