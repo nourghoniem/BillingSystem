@@ -39,7 +39,7 @@ public class DatabaseManagement {
         ArrayList<CDR> cdrs = null;
         try {
             stmt = conn.createStatement();
-            String SQL = "SELECT msisdn, dial_b, usage, service_id, rateplan_id FROM rating;";
+            String SQL = "SELECT id, msisdn, dial_b, usage, service_id, rateplan_id FROM rating WHERE id NOT IN (SELECT rating_id FROM customer_usage);";
             rs = stmt.executeQuery(SQL);
             cdrs = new ArrayList<CDR>();
             while (rs.next()) {
@@ -48,7 +48,8 @@ public class DatabaseManagement {
                 Double usage = rs.getDouble("usage");
                 Integer service_id = rs.getInt("service_id");
                 Integer rateplan_id = rs.getInt("rateplan_id");
-                CDR cdr = new CDR(msisdn, dial_b, service_id, rateplan_id, usage);
+                Integer cdr_id = rs.getInt("id");
+                CDR cdr = new CDR(cdr_id, msisdn, dial_b, service_id, rateplan_id, usage);
                 cdrs.add(cdr);
             }
         } catch (SQLException e) {
@@ -63,7 +64,7 @@ public class DatabaseManagement {
             if (!rating.isEmpty()) {
 
                 for (Rating r : rating) {
-                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data) VALUES(?,?,?,?,?,?,?)");
+                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, sms_international, rating_id) VALUES(?,?,?,?,?,?,?,?,?,?)");
                     pst.setString(1, r.getMsisdn());
                     pst.setInt(2, r.getRateplan_id());
                     pst.setDouble(3, r.getVoice_onnet());
@@ -71,6 +72,9 @@ public class DatabaseManagement {
                     pst.setDouble(5, r.getSms_onnet());
                     pst.setDouble(6, r.getSms_crossnet());
                     pst.setDouble(7, r.getData());
+                    pst.setDouble(8, r.getVoice_international());
+                    pst.setDouble(9, r.getSms_international());
+                    pst.setDouble(10, r.getCdr_id());
                     int rows = pst.executeUpdate();
 
                 }
@@ -82,16 +86,4 @@ public class DatabaseManagement {
             e.printStackTrace();
         }
     }
-
-    public void createView() {
-        try {
-            stmt = conn.createStatement();
-            String SQL = "CREATE VIEW customer_view AS SELECT msisdn, rateplan_id, sum(voice_onnet) AS voice_onnet, sum(voice_crossnet) AS voice_crossnet, sum(sms_onnet) AS sms_onnet, sum(sms_crossnet) AS sms_crossnet, sum(data) AS data FROM customer_usage GROUP BY msisdn, rateplan_id;";
-            stmt.executeUpdate(SQL);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
 }

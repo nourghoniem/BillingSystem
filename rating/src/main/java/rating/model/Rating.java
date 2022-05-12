@@ -9,6 +9,7 @@ package rating.model;
  * @author nour
  */
 public class Rating {
+    private Integer cdr_id;
     private String msisdn;                                
     private Integer rateplan_id;                      
     private Double voice_onnet = 0.0;                 
@@ -16,6 +17,8 @@ public class Rating {
     private Double data = 0.0;
     private Integer sms_onnet = 0;
     private Integer sms_crossnet =0;
+    private Double voice_international = 0.0;
+    private Integer sms_international = 0;
     
     public Rating (){}
 
@@ -28,6 +31,16 @@ public class Rating {
         this.sms_onnet = sms_onnet;
         this.sms_crossnet = sms_crossnet;
     }
+
+    public Integer getCdr_id() {
+        return cdr_id;
+    }
+
+    public void setCdr_id(Integer cdr_id) {
+        this.cdr_id = cdr_id;
+    }
+    
+    
 
     public String getMsisdn() {
         return msisdn;
@@ -84,5 +97,23 @@ public class Rating {
     public void setSms_crossnet(Integer sms_crossnet) {
         this.sms_crossnet = sms_crossnet;
     }
+
+    public Double getVoice_international() {
+        return voice_international;
+    }
+
+    public void setVoice_international(Double voice_international) {
+        this.voice_international = voice_international;
+    }
+
+    public Integer getSms_international() {
+        return sms_international;
+    }
+
+    public void setSms_international(Integer sms_international) {
+        this.sms_international = sms_international;
+    }
+    
+    
        
 }

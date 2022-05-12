@@ -13,6 +13,7 @@ import java.time.LocalTime;
  */
 public class CDR {
     
+    private int cdr_id;
     private String msisdn;
     private String dial_b;
     private int service_id;
@@ -22,13 +23,22 @@ public class CDR {
     
     public CDR() {}
 
-    public CDR(String msisdn, String dial_b, int service_id, int rateplan_id, double usage) {
+    public CDR(int cdr_id, String msisdn, String dial_b, int service_id, int rateplan_id, double usage) {
+        this.cdr_id = cdr_id;
         this.msisdn = msisdn;
         this.dial_b = dial_b;
         this.service_id = service_id;
         this.rateplan_id = rateplan_id;
         this.usage = usage;
         
+    }
+
+    public int getCdr_id() {
+        return cdr_id;
+    }
+
+    public void setCdr_id(int cdr_id) {
+        this.cdr_id = cdr_id;
     }
 
     public String getMsisdn() {
