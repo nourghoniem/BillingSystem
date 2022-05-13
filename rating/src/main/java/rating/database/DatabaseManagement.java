@@ -9,10 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import rating.model.CDR;
 import rating.model.Rating;
 
@@ -85,5 +83,98 @@ public class DatabaseManagement {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int getRatePlan(String msisdn) throws SQLException {
+        String guery = "SELECT rateplan_id FROM customer_usage ";
+        pst = conn.prepareStatement(guery);
+        rs = pst.executeQuery();
+        while (rs.next()) {
+            return rs.getInt("rateplan_id");
+        }
+        return -1;
+    }
+
+    public ArrayList<String> getUsers() throws SQLException {
+        ArrayList<String> users = new ArrayList<String>();
+        String guery = "SELECT msisdn FROM customer_usage ";
+        pst = conn.prepareStatement(guery);
+        rs = pst.executeQuery();
+        while (rs.next()) {
+            users.add(rs.getString("msisdn"));
+        }
+        return users;
+    }
+
+    public Rating getCustomerUsage(String msisdn) throws SQLException {
+
+        String guery = "SELECT * FROM customer_usage where msisdn =?";
+        pst = conn.prepareStatement(guery);
+        pst.setString(1, msisdn);
+        rs = pst.executeQuery();
+        Rating usage = new Rating();
+        while (rs.next()) {
+            usage.setVoice_onnet(rs.getDouble("voice_onnet"));
+            usage.setVoice_crossnet(rs.getDouble("voice_crossnet"));
+            usage.setSms_onnet(rs.getInt("sms_onnet"));
+            usage.setSms_crossnet(rs.getInt("sms_crossnet"));
+            usage.setData(rs.getDouble("data"));
+            usage.setVoice_international(rs.getDouble("voice_international"));
+
+        }
+        return usage;
+    }
+
+    public HashMap<String, Integer> getCustomerPackage(int ratePlanId) throws SQLException {
+        HashMap<String, Integer> pakage = new HashMap<>();
+
+        String sQuery = "select concat(s.event_type,' ',st.\"type\") as service,sp.amount  from service_package sp ,service_rateplan srp ,service s,service_type st \n"
+                + "where sp.id=srp.service_package_id  and\n"
+                + "sp.service_type_id=st.id and s.id=sp.service_id and srp.rateplan_id=?";
+        PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+        selectStatement.setInt(1, ratePlanId);
+        ResultSet res = selectStatement.executeQuery();
+        while (res.next()) {
+            pakage.put(res.getString("service"), res.getInt("amount"));
+
+        }
+        selectStatement.close();
+
+        return pakage;
+    }
+
+    public HashMap<String, Integer> getFreePackage(int ratePlanId) throws SQLException {
+        HashMap<String, Integer> pakage = new HashMap<>();
+
+        String sQuery = "select concat(s.event_type,' ',st.\"type\") as service,f.amount \n"
+                + " from free_units f ,service_type st,rateplan rp ,service s\n"
+                + " where rp.free_unit_id=f.id and st.id = f.service_package_type_id and f.service_id=s.id\n"
+                + "  and rp.id=?";
+        PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+        selectStatement.setInt(1, ratePlanId);
+        ResultSet res = selectStatement.executeQuery();
+        while (res.next()) {
+            pakage.put(res.getString("service"), res.getInt("amount"));
+
+        }
+        selectStatement.close();
+
+        return pakage;
+    }
+
+    public float getServicePrice(String serviceType, String serviceDestination) throws SQLException {
+        float price = 0;
+
+        String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? and st.\"type\"=?";
+        PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+        selectStatement.setString(1, serviceType);
+        selectStatement.setString(2, serviceDestination);
+        ResultSet res = selectStatement.executeQuery();
+        while (res.next()) {
+            price = res.getFloat("price");
+
+        }
+
+        return price;
     }
 }

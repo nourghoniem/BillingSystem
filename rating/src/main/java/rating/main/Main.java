@@ -4,11 +4,12 @@
  */
 package rating.main;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import rating.database.DatabaseManagement;
 import rating.model.CDR;
+import rating.model.CalculateExtraCharge;
 import rating.model.Rating;
 
 /**
@@ -17,13 +18,14 @@ import rating.model.Rating;
  */
 public class Main {
 
-    public static void main(final String[] args) throws IOException {
-        
+    public static void main(final String[] args) throws IOException, SQLException {
+
         DatabaseManagement database = new DatabaseManagement();
         ArrayList<CDR> cdrs = database.getCDRs();
         ArrayList<Rating> rating_list = ManageUsage.setCustomerUsage(cdrs);
         database.insertIntoCustomerUsage(rating_list);
-
+        CalculateExtraCharge extrach = new CalculateExtraCharge();
+        System.out.println(extrach.CalculateExtraCharge());
     }
 
 }

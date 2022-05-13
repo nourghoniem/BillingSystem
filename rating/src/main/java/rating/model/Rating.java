@@ -9,18 +9,20 @@ package rating.model;
  * @author nour
  */
 public class Rating {
+
     private Integer cdr_id;
-    private String msisdn;                                
-    private Integer rateplan_id;                      
-    private Double voice_onnet = 0.0;                 
+    private String msisdn;
+    private Integer rateplan_id;
+    private Double voice_onnet = 0.0;
     private Double voice_crossnet = 0.0;
     private Double data = 0.0;
     private Integer sms_onnet = 0;
-    private Integer sms_crossnet =0;
+    private Integer sms_crossnet = 0;
     private Double voice_international = 0.0;
     private Integer sms_international = 0;
-    
-    public Rating (){}
+
+    public Rating() {
+    }
 
     public Rating(String msisdn, Integer rateplan_id, Double voice_onnet, Double voice_crossnet, Double data, Integer sms_onnet, Integer sms_crossnet) {
         this.msisdn = msisdn;
@@ -39,8 +41,6 @@ public class Rating {
     public void setCdr_id(Integer cdr_id) {
         this.cdr_id = cdr_id;
     }
-    
-    
 
     public String getMsisdn() {
         return msisdn;
@@ -113,7 +113,5 @@ public class Rating {
     public void setSms_international(Integer sms_international) {
         this.sms_international = sms_international;
     }
-    
-    
-       
+
 }
