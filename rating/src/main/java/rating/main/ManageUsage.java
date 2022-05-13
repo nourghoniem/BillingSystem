@@ -42,18 +42,13 @@ public class ManageUsage {
                     break;
 
                 case 2:
-                    if (dial_code == true) {
                         if (dial_b.substring(1).startsWith("1")) {
                             sms_usage = (int) c.getUsage();
                             rating.setSms_onnet(sms_usage);
                         } else {
                             sms_usage = (int) c.getUsage();
                             rating.setSms_crossnet(sms_usage);
-                        }
-                    } else {
-                        sms_usage = (int) c.getUsage();
-                        rating.setSms_international(sms_usage);
-                    }
+                        } 
                     break;
 
                 case 3:
