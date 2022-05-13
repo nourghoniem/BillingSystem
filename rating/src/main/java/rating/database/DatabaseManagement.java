@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import rating.model.CDR;
 import rating.model.Rating;
+import rating.model.User;
 
 /**
  *
@@ -85,96 +86,148 @@ public class DatabaseManagement {
         }
     }
 
-    public int getRatePlan(String msisdn) throws SQLException {
-        String guery = "SELECT rateplan_id FROM customer_usage ";
-        pst = conn.prepareStatement(guery);
-        rs = pst.executeQuery();
-        while (rs.next()) {
-            return rs.getInt("rateplan_id");
+    public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<User>();
+        User user;
+        String guery = "SELECT msisdn ,rateplan_id FROM customer_view ";
+        try {
+            pst = conn.prepareStatement(guery);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                user = new User(rs.getString("msisdn"), rs.getInt("rateplan_id"));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        return -1;
+        return null;
     }
 
-    public ArrayList<String> getUsers() throws SQLException {
-        ArrayList<String> users = new ArrayList<String>();
-        String guery = "SELECT msisdn FROM customer_usage ";
-        pst = conn.prepareStatement(guery);
-        rs = pst.executeQuery();
-        while (rs.next()) {
-            users.add(rs.getString("msisdn"));
+    public Rating getCustomerUsage(String msisdn) {
+        try {
+            String guery = "SELECT * FROM customer_view where msisdn =?";
+            pst = conn.prepareStatement(guery);
+            pst.setString(1, msisdn);
+            rs = pst.executeQuery();
+            Rating usage = new Rating();
+            while (rs.next()) {
+                usage.setVoice_onnet(rs.getDouble("voice_onnet"));
+                usage.setVoice_crossnet(rs.getDouble("voice_crossnet"));
+                usage.setSms_onnet(rs.getInt("sms_onnet"));
+                usage.setSms_crossnet(rs.getInt("sms_crossnet"));
+                usage.setData(rs.getDouble("data"));
+                usage.setVoice_international(rs.getDouble("voice_international"));
+
+            }
+            return usage;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        return users;
+        return null;
     }
 
-    public Rating getCustomerUsage(String msisdn) throws SQLException {
+    public HashMap<String, Integer> getCustomerPackage(int ratePlanId) {
+        try {
+            HashMap<String, Integer> pakage = new HashMap<>();
 
-        String guery = "SELECT * FROM customer_usage where msisdn =?";
-        pst = conn.prepareStatement(guery);
-        pst.setString(1, msisdn);
-        rs = pst.executeQuery();
-        Rating usage = new Rating();
-        while (rs.next()) {
-            usage.setVoice_onnet(rs.getDouble("voice_onnet"));
-            usage.setVoice_crossnet(rs.getDouble("voice_crossnet"));
-            usage.setSms_onnet(rs.getInt("sms_onnet"));
-            usage.setSms_crossnet(rs.getInt("sms_crossnet"));
-            usage.setData(rs.getDouble("data"));
-            usage.setVoice_international(rs.getDouble("voice_international"));
+            String sQuery = "select case when s.event_type='voice'and st.\"type\"='on-net' then 'voice_onnet' \n"
+                    + "when s.event_type='voice'and st.\"type\"='cross-net' then'voice_crossnet'\n"
+                    + "when s.event_type='voice'and st.\"type\"='roaming' then'voice_roaming'\n"
+                    + "when s.event_type='voice'and st.\"type\"='international' then'voice_international'\n"
+                    + "when s.event_type='SMS'and st.\"type\"='cross-net' then'sms_crossnet'\n"
+                    + "when s.event_type='SMS'and st.\"type\"='on-net' then'sms_onnet'\n"
+                    + "when s.event_type='data' then'data'\n"
+                    + "end as service,sp.amount  from service_package sp ,service_rateplan srp ,service s,service_type st \n"
+                    + "                where sp.id=srp.service_package_id  and\n"
+                    + "               sp.service_type_id=st.id and s.id=sp.service_id and srp.rateplan_id=?;";
+            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+            selectStatement.setInt(1, ratePlanId);
+            ResultSet res = selectStatement.executeQuery();
+            while (res.next()) {
+                pakage.put(res.getString("service"), res.getInt("amount"));
+
+            }
+            selectStatement.close();
+
+            return pakage;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
 
         }
-        return usage;
+        return null;
     }
 
-    public HashMap<String, Integer> getCustomerPackage(int ratePlanId) throws SQLException {
-        HashMap<String, Integer> pakage = new HashMap<>();
+    public HashMap<String, Integer> getFreePackage(int ratePlanId) {
+        try {
+            HashMap<String, Integer> pakage = new HashMap<>();
 
-        String sQuery = "select concat(s.event_type,' ',st.\"type\") as service,sp.amount  from service_package sp ,service_rateplan srp ,service s,service_type st \n"
-                + "where sp.id=srp.service_package_id  and\n"
-                + "sp.service_type_id=st.id and s.id=sp.service_id and srp.rateplan_id=?";
-        PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-        selectStatement.setInt(1, ratePlanId);
-        ResultSet res = selectStatement.executeQuery();
-        while (res.next()) {
-            pakage.put(res.getString("service"), res.getInt("amount"));
+            String sQuery = "select case when s.event_type='voice'and st.\"type\"='on-net' then 'voice_onnet' \n"
+                    + "when s.event_type='voice'and st.\"type\"='cross-net' then'voice_crossnet'\n"
+                    + "when s.event_type='voice'and st.\"type\"='roaming' then'voice_roaming'\n"
+                    + "when s.event_type='voice'and st.\"type\"='international' then'voice_international'\n"
+                    + "when s.event_type='SMS'and st.\"type\"='cross-net' then'sms_crossnet'\n"
+                    + "when s.event_type='SMS'and st.\"type\"='on-net' then'sms_onnet'\n"
+                    + "when s.event_type='data' then'data'\n"
+                    + "end as service,f.amount \n"
+                    + " from free_units f ,service_type st,rateplan rp ,service s\n"
+                    + " where rp.free_unit_id=f.id and st.id = f.service_package_type_id and f.service_id=s.id\n"
+                    + "  and rp.id=?";
+            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+            selectStatement.setInt(1, ratePlanId);
+            ResultSet res = selectStatement.executeQuery();
+            while (res.next()) {
+                pakage.put(res.getString("service"), res.getInt("amount"));
 
+            }
+            selectStatement.close();
+
+            return pakage;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        selectStatement.close();
-
-        return pakage;
+        return null;
     }
 
-    public HashMap<String, Integer> getFreePackage(int ratePlanId) throws SQLException {
-        HashMap<String, Integer> pakage = new HashMap<>();
+    public Double getServicePrice(String serviceType, String serviceDestination) {
+        Double price = 0.0;
+        try {
+            String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? and st.\"type\"=?";
+            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+            selectStatement.setString(1, serviceType);
+            selectStatement.setString(2, serviceDestination);
+            ResultSet res = selectStatement.executeQuery();
+            while (res.next()) {
+                price = res.getDouble("price");
 
-        String sQuery = "select concat(s.event_type,' ',st.\"type\") as service,f.amount \n"
-                + " from free_units f ,service_type st,rateplan rp ,service s\n"
-                + " where rp.free_unit_id=f.id and st.id = f.service_package_type_id and f.service_id=s.id\n"
-                + "  and rp.id=?";
-        PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-        selectStatement.setInt(1, ratePlanId);
-        ResultSet res = selectStatement.executeQuery();
-        while (res.next()) {
-            pakage.put(res.getString("service"), res.getInt("amount"));
+            }
 
+            return price;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        selectStatement.close();
-
-        return pakage;
+        ;
+        return -1.0;
     }
 
-    public float getServicePrice(String serviceType, String serviceDestination) throws SQLException {
-        float price = 0;
+    public Double getServicePrice(String serviceType) {
+        Double price = 0.0;
+        try {
+            String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? ";
+            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
+            selectStatement.setString(1, serviceType);
 
-        String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? and st.\"type\"=?";
-        PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-        selectStatement.setString(1, serviceType);
-        selectStatement.setString(2, serviceDestination);
-        ResultSet res = selectStatement.executeQuery();
-        while (res.next()) {
-            price = res.getFloat("price");
+            ResultSet res = selectStatement.executeQuery();
+            while (res.next()) {
+                price = res.getDouble("price");
 
+            }
+
+            return price;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
-        return price;
+        return -1.0;
     }
 }

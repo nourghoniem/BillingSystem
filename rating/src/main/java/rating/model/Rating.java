@@ -114,4 +114,29 @@ public class Rating {
         this.sms_international = sms_international;
     }
 
+    public Double getService(String service) {
+        Double usage = 0.0;
+        switch (service) {
+            case "voice_onnet":
+                usage = getVoice_onnet();
+                break;
+            case "voice_crossnet":
+                usage = getVoice_crossnet();
+                break;
+            case "sms_crossnet":
+                usage = getSms_onnet() * 1.0;
+                break;
+            case "sms_onnet":
+                usage = getSms_crossnet() * 1.0;
+                break;
+            case "voice_international":
+                usage = getVoice_international();
+                break;
+            case "data":
+                usage = getData();
+                break;
+
+        }
+        return usage;
+    }
 }

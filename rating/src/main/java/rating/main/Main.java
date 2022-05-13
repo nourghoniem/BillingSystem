@@ -11,6 +11,7 @@ import rating.database.DatabaseManagement;
 import rating.model.CDR;
 import rating.model.CalculateExtraCharge;
 import rating.model.Rating;
+import rating.model.User;
 
 /**
  *
@@ -24,8 +25,10 @@ public class Main {
         ArrayList<CDR> cdrs = database.getCDRs();
         ArrayList<Rating> rating_list = ManageUsage.setCustomerUsage(cdrs);
         database.insertIntoCustomerUsage(rating_list);
-        CalculateExtraCharge extrach = new CalculateExtraCharge();
-        System.out.println(extrach.CalculateExtraCharge());
+        ArrayList<User> hu = CalculateExtraCharge.Calculations();
+        for (User u : hu) {
+            System.out.println(u.getExtraCharges());
+        }
     }
 
 }

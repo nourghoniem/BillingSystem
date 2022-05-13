@@ -13,8 +13,8 @@ import rating.model.Rating;
  * @author nour
  */
 public class ManageUsage {
-    
-        public static ArrayList<Rating> setCustomerUsage(ArrayList<CDR> cdrs) {
+
+    public static ArrayList<Rating> setCustomerUsage(ArrayList<CDR> cdrs) {
         ArrayList<Rating> rating_list = new ArrayList<Rating>();
         for (CDR c : cdrs) {
 
@@ -27,16 +27,16 @@ public class ManageUsage {
             int sms_usage;
 
             switch (c.getService_id()) {
-                case 1: 
-                    if (dial_code == true) { 
+                case 1:
+                    if (dial_code == true) {
 
                         if (dial_b.substring(1).startsWith("1")) {
                             rating.setVoice_onnet(c.getUsage());
                         } else {
-          
+
                             rating.setVoice_crossnet(c.getUsage());
                         }
-                    } else { 
+                    } else {
                         rating.setVoice_international(c.getUsage());
                     }
                     break;
@@ -61,9 +61,9 @@ public class ManageUsage {
                     break;
 
             }
-             rating_list.add(rating);
+            rating_list.add(rating);
         }
-          return rating_list;
+        return rating_list;
     }
-    
+
 }
