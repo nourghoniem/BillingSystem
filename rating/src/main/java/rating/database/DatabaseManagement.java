@@ -63,7 +63,7 @@ public class DatabaseManagement {
             if (!rating.isEmpty()) {
 
                 for (Rating r : rating) {
-                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, sms_international, rating_id) VALUES(?,?,?,?,?,?,?,?,?,?)");
+                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, rating_id) VALUES(?,?,?,?,?,?,?,?,?)");
                     pst.setString(1, r.getMsisdn());
                     pst.setInt(2, r.getRateplan_id());
                     pst.setDouble(3, r.getVoice_onnet());
@@ -72,8 +72,7 @@ public class DatabaseManagement {
                     pst.setDouble(6, r.getSms_crossnet());
                     pst.setDouble(7, r.getData());
                     pst.setDouble(8, r.getVoice_international());
-                    pst.setDouble(9, r.getSms_international());
-                    pst.setDouble(10, r.getCdr_id());
+                    pst.setDouble(9, r.getCdr_id());
                     int rows = pst.executeUpdate();
 
                 }

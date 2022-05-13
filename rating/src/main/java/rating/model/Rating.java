@@ -19,7 +19,6 @@ public class Rating {
     private Integer sms_onnet = 0;
     private Integer sms_crossnet = 0;
     private Double voice_international = 0.0;
-    private Integer sms_international = 0;
 
     public Rating() {
     }
@@ -105,15 +104,7 @@ public class Rating {
     public void setVoice_international(Double voice_international) {
         this.voice_international = voice_international;
     }
-
-    public Integer getSms_international() {
-        return sms_international;
-    }
-
-    public void setSms_international(Integer sms_international) {
-        this.sms_international = sms_international;
-    }
-
+    
     public Double getService(String service) {
         Double usage = 0.0;
         switch (service) {
