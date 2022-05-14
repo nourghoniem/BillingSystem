@@ -7,6 +7,8 @@ package com.billing.postgresql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -41,20 +43,27 @@ public class DB_Connection {
             connection.setAutoCommit(false);
             System.out.println("Connection is made successfully");
 
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("webDatabase.WebDataBase.connect()error");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DB_Connection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DB_Connection.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
 
     
-    public void closeDatabase() throws SQLException {
-        connection.close();
+    public void closeDatabaseConnection() {
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DB_Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void main(String[] args) throws SQLException {
 //        WebDatabase db = WebDatabase.databaseInstance;
+        
     }
 
 }

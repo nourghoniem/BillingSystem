@@ -67,4 +67,9 @@ public class RatePlanHandler {
         }
         return currentRPs;
     }
+    
+    public static void main(String[] args) {
+        
+        ratePlanHandlerInstance.AddServiceRatePlan(new RatePlan(1, "test"));
+    }
 }
