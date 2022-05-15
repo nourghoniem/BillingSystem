@@ -42,11 +42,7 @@ public class AdditionalCharges {
         this.non_rating = non_rating;
     }
 
-    public AdditionalCharges() { 
-        
-    }
-    
-   
+  
    
    
    
