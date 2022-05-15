@@ -17,17 +17,24 @@ public class CalculateExtraCharge {
     private static DatabaseManagement database = new DatabaseManagement();
     private static ArrayList<User> users = database.getUsers();
     private static Double extraCharge = 0.0;
-
+    
+    
     public static ArrayList<User> Calculations() {
 
         ArrayList<User> usersInfo = new ArrayList<User>();
         for (User user : users) {
+            System.out.println(user.getRatePlanId());
             user.setBundle(database.getCustomerPackage(user.getRatePlanId()));
             user.setFreeUnits(database.getFreePackage(user.getRatePlanId()));
             user.setUsage(database.getCustomerUsage(user.getMsisdn()));
+            user.setOne_time(database.getAdditionalcharges(user.getMsisdn()).getOne_time());
+            user.setNon_rating(database.getAdditionalcharges(user.getMsisdn()).getNon_rating());
+            user.setRecurring(database.getAdditionalcharges(user.getMsisdn()).getRecurring());
+            user.setRatePlanPrice(database.getRatePlanPrice(user.getRatePlanId()));
+            
             user.setExtraCharges(getServiceExteraCharge(user));
             usersInfo.add(user);
-
+            
         }
         return usersInfo;
     }
