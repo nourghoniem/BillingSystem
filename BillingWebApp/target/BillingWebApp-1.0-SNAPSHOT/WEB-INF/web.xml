@@ -4,6 +4,22 @@
         <description>ServletContextListener</description>
         <listener-class>com.billing.webappinit.ContextInitializer</listener-class>
     </listener>
+    <servlet>
+        <servlet-name>AddCustomer</servlet-name>
+        <servlet-class>com.billing.customers.AddCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetCustomers</servlet-name>
+        <servlet-class>com.billing.customers.GetCustomers</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddCustomer</servlet-name>
+        <url-pattern>/AddCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetCustomers</servlet-name>
+        <url-pattern>/GetCustomers</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

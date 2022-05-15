@@ -5,10 +5,13 @@
 package rating.database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import rating.model.CDR;
@@ -38,7 +41,7 @@ public class DatabaseManagement {
         ArrayList<CDR> cdrs = null;
         try {
             stmt = conn.createStatement();
-            String SQL = "SELECT id, msisdn, dial_b, usage, service_id, rateplan_id FROM rating WHERE id NOT IN (SELECT rating_id FROM customer_usage);";
+            String SQL = "SELECT id, msisdn, dial_b, usage, service_id, rateplan_id, start_date FROM rating WHERE id NOT IN (SELECT rating_id FROM customer_usage);";
             rs = stmt.executeQuery(SQL);
             cdrs = new ArrayList<CDR>();
             while (rs.next()) {
@@ -48,7 +51,8 @@ public class DatabaseManagement {
                 Integer service_id = rs.getInt("service_id");
                 Integer rateplan_id = rs.getInt("rateplan_id");
                 Integer cdr_id = rs.getInt("id");
-                CDR cdr = new CDR(cdr_id, msisdn, dial_b, service_id, rateplan_id, usage);
+                Date date = rs.getDate("start_date");
+                CDR cdr = new CDR(cdr_id, msisdn, dial_b, service_id, rateplan_id, usage, date.toLocalDate());
                 cdrs.add(cdr);
             }
         } catch (SQLException e) {
@@ -63,7 +67,7 @@ public class DatabaseManagement {
             if (!rating.isEmpty()) {
 
                 for (Rating r : rating) {
-                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, rating_id) VALUES(?,?,?,?,?,?,?,?,?)");
+                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, rating_id, rating_date) VALUES(?,?,?,?,?,?,?,?,?,?)");
                     pst.setString(1, r.getMsisdn());
                     pst.setInt(2, r.getRateplan_id());
                     pst.setDouble(3, r.getVoice_onnet());
@@ -73,6 +77,8 @@ public class DatabaseManagement {
                     pst.setDouble(7, r.getData());
                     pst.setDouble(8, r.getVoice_international());
                     pst.setDouble(9, r.getCdr_id());
+                    Date date = Date.valueOf(r.getDate());
+                    pst.setDate(10, date );
                     int rows = pst.executeUpdate();
 
                 }

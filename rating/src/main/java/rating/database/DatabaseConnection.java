@@ -29,7 +29,7 @@ public class DatabaseConnection {
         try {
 
             con = DriverManager.getConnection("jdbc:postgresql://bkaxb3w5rvjztkre1shf-postgresql.services.clever-cloud.com:5432/bkaxb3w5rvjztkre1shf", "uiivnrlitesybgtcbqso", "3u6dKo3lOPgPz5gGGWCX");
-            System.out.println("database connected");
+//            System.out.println("database connected");
         } catch (Exception ex) {
     
             System.out.println("exception at database connection" + ex);

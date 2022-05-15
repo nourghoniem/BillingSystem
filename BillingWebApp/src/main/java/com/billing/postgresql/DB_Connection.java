@@ -11,10 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-/**
- *
- * @author asmaaMohamed
- */
+
 public class DB_Connection {
 
     private final String URL = "jdbc:postgresql://bkaxb3w5rvjztkre1shf-postgresql.services.clever-cloud.com:5432/bkaxb3w5rvjztkre1shf";

@@ -22,6 +22,7 @@ public class ManageUsage {
             rating.setMsisdn(c.getMsisdn());
             rating.setRateplan_id(c.getRateplan_id());
             rating.setCdr_id(c.getCdr_id());
+            rating.setDate(c.getDate());
             String dial_b = c.getDial_b().substring(4);
             boolean dial_code = c.getDial_b().startsWith("0020");
             int sms_usage;
