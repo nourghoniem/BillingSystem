@@ -26,13 +26,24 @@ public class Main {
         ArrayList<Rating> rating_list = ManageUsage.setCustomerUsage(cdrs);
         database.insertIntoCustomerUsage(rating_list);
         ArrayList<User> hu = CalculateExtraCharge.Calculations();
+        
+        
         for (User u : hu) {
-            System.out.println(u.getExtraCharges());
+          System.out.println(u.getExtraCharges());
+          System.out.println(u.getMsisdn());
+             
+          System.out.println(u.getOne_time());
+          System.out.println(u.getNon_rating());
+          System.out.println(u.getRecurring());
+          System.out.println(u.getRatePlanPrice());
+          System.out.println(u.getRatePlanId());
+          
+//            
         }
-//        Billing(user -> excharges, recurrenig, onetime, non rating
-//        ,total cost
-//        );
-//        method(billing);
+
+       
+        
+       }
     }
 
-}
+

@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
+import rating.model.AdditionalCharges;
 import rating.model.CDR;
 import rating.model.Rating;
 import rating.model.User;
@@ -100,6 +101,7 @@ public class DatabaseManagement {
             rs = pst.executeQuery();
             while (rs.next()) {
                 user = new User(rs.getString("msisdn"), rs.getInt("rateplan_id"));
+                System.out.println(rs.getInt("rateplan_id"));
                 users.add(user);
             }
             return users;
@@ -233,6 +235,56 @@ public class DatabaseManagement {
             System.out.println(e.getMessage());
         }
 
+        return -1.0;
+    }
+
+    public AdditionalCharges getAdditionalcharges(String msisdn) {
+
+        AdditionalCharges charges = new AdditionalCharges();
+
+        try {
+
+            String query = "SELECT j.price as non_rating, w.id as rateplan, r.price as recurring, o.price as one_time, c.msisdn FROM contract as c inner join one_time_service as o on o.id=c.one_time inner join recurring_service as r on c.recurring=r.id  inner join rateplan as w on w.id=c.rateplan_id inner join non_rating as j on w.non_rating_id=j.id WHERE msisdn=?;";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, msisdn);
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                double non_rating = rs.getDouble("non_rating");
+                double one_time = rs.getDouble("one_time");
+                double recurring = rs.getDouble("recurring");
+
+                charges.setOne_time(one_time);
+                charges.setRecurring(recurring);
+                charges.setNon_rating(non_rating);
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println("error");
+        }
+        return charges;
+
+    }
+
+    public  Double getRatePlanPrice(int rateplanid) {
+        try {
+           
+            String query = "SELECT price from rateplan WHERE id=?;";
+            pst = conn.prepareStatement(query);
+            pst.setInt(1, rateplanid);
+
+            rs = pst.executeQuery();
+            while (rs.next()){
+            return rs.getDouble("price");
+            
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        }
         return -1.0;
     }
 }
