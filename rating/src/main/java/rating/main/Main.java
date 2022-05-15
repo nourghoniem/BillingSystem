@@ -29,10 +29,7 @@ public class Main {
         for (User u : hu) {
             System.out.println(u.getExtraCharges());
         }
-        Billing(user -> excharges, recurrenig, onetime, non rating
-        ,total cost
-        );
-        method(billing);
+
     }
 
 }
