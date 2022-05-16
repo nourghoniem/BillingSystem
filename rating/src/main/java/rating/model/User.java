@@ -18,6 +18,20 @@ public class User {
     private HashMap<String, Integer> freeUnits;
     private Rating usage;
     private Double extraCharges = 0.0;
+   private Double one_time = 0.0; 
+   private Double recurring = 0.0;
+   private Double non_rating = 0.0;
+private Double RatePlanPrice = 0.0;
+
+
+    public Double getRatePlanPrice() {
+        return RatePlanPrice;
+    }
+
+    public void setRatePlanPrice(Double RatePlanPrice) {
+        this.RatePlanPrice = RatePlanPrice;
+    }
+   
 
     public User(String msisdn, int ratePlanId) {
         this.msisdn = msisdn;
@@ -25,9 +39,11 @@ public class User {
     }
 
     public User() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
     }
-
+    
+   
+    
     public Rating getUsage() {
         return usage;
     }
@@ -75,5 +91,31 @@ public class User {
     public void setExtraCharges(Double extraCharges) {
         this.extraCharges = extraCharges;
     }
+
+    public Double getOne_time() {
+        return one_time;
+    }
+
+    public void setOne_time(Double one_time) {
+        this.one_time = one_time;
+    }
+
+    public Double getRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(Double recurring) {
+        this.recurring = recurring;
+    }
+
+    public Double getNon_rating() {
+        return non_rating;
+    }
+
+    public void setNon_rating(Double non_rating) {
+        this.non_rating = non_rating;
+    }
+
+  
 
 }

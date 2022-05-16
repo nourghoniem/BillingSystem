@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import rating.database.DatabaseManagement;
 import rating.model.CDR;
-import rating.model.CalculateExtraCharge;
 import rating.model.Rating;
 import rating.model.User;
 
@@ -25,9 +24,11 @@ public class Main {
         ArrayList<CDR> cdrs = database.getCDRs();
         ArrayList<Rating> rating_list = ManageUsage.setCustomerUsage(cdrs);
         database.insertIntoCustomerUsage(rating_list);
-        ArrayList<User> hu = CalculateExtraCharge.Calculations();
+        ArrayList<User> hu = CalculateExtraCharge.Calculations(database);
+
         for (User u : hu) {
-            System.out.println(u.getExtraCharges());
+            System.out.println(u.getMsisdn());
+            database.insertIntoBilling(u);
         }
 
     }

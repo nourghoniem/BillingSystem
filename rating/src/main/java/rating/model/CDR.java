@@ -19,20 +19,30 @@ public class CDR {
     private int service_id;
     private int rateplan_id;
     private double usage;
+    private LocalDate date;
    
     
     public CDR() {}
 
-    public CDR(int cdr_id, String msisdn, String dial_b, int service_id, int rateplan_id, double usage) {
+    public CDR(int cdr_id, String msisdn, String dial_b, int service_id, int rateplan_id, double usage, LocalDate date) {
         this.cdr_id = cdr_id;
         this.msisdn = msisdn;
         this.dial_b = dial_b;
         this.service_id = service_id;
         this.rateplan_id = rateplan_id;
+        this.date = date;
         this.usage = usage;
         
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+    
     public int getCdr_id() {
         return cdr_id;
     }

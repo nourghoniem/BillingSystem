@@ -5,12 +5,14 @@
 package rating.database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import rating.model.AdditionalCharges;
 import rating.model.CDR;
 import rating.model.Rating;
 import rating.model.User;
@@ -38,7 +40,7 @@ public class DatabaseManagement {
         ArrayList<CDR> cdrs = null;
         try {
             stmt = conn.createStatement();
-            String SQL = "SELECT id, msisdn, dial_b, usage, service_id, rateplan_id FROM rating WHERE id NOT IN (SELECT rating_id FROM customer_usage);";
+            String SQL = "SELECT id, msisdn, dial_b, usage, service_id, rateplan_id, start_date FROM rating WHERE id NOT IN (SELECT rating_id FROM customer_usage);";
             rs = stmt.executeQuery(SQL);
             cdrs = new ArrayList<CDR>();
             while (rs.next()) {
@@ -48,7 +50,8 @@ public class DatabaseManagement {
                 Integer service_id = rs.getInt("service_id");
                 Integer rateplan_id = rs.getInt("rateplan_id");
                 Integer cdr_id = rs.getInt("id");
-                CDR cdr = new CDR(cdr_id, msisdn, dial_b, service_id, rateplan_id, usage);
+                Date date = rs.getDate("start_date");
+                CDR cdr = new CDR(cdr_id, msisdn, dial_b, service_id, rateplan_id, usage, date.toLocalDate());
                 cdrs.add(cdr);
             }
         } catch (SQLException e) {
@@ -63,7 +66,7 @@ public class DatabaseManagement {
             if (!rating.isEmpty()) {
 
                 for (Rating r : rating) {
-                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, rating_id) VALUES(?,?,?,?,?,?,?,?,?)");
+                    pst = conn.prepareStatement("INSERT INTO customer_usage (msisdn, rateplan_id, voice_onnet, voice_crossnet, sms_onnet, sms_crossnet, data, voice_international, rating_id, rating_date) VALUES(?,?,?,?,?,?,?,?,?,?)");
                     pst.setString(1, r.getMsisdn());
                     pst.setInt(2, r.getRateplan_id());
                     pst.setDouble(3, r.getVoice_onnet());
@@ -73,6 +76,8 @@ public class DatabaseManagement {
                     pst.setDouble(7, r.getData());
                     pst.setDouble(8, r.getVoice_international());
                     pst.setDouble(9, r.getCdr_id());
+                    Date date = Date.valueOf(r.getDate());
+                    pst.setDate(10, date);
                     int rows = pst.executeUpdate();
 
                 }
@@ -94,6 +99,7 @@ public class DatabaseManagement {
             rs = pst.executeQuery();
             while (rs.next()) {
                 user = new User(rs.getString("msisdn"), rs.getInt("rateplan_id"));
+                System.out.println(rs.getInt("rateplan_id"));
                 users.add(user);
             }
             return users;
@@ -172,14 +178,14 @@ public class DatabaseManagement {
                     + " from free_units f ,service_type st,rateplan rp ,service s\n"
                     + " where rp.free_unit_id=f.id and st.id = f.service_package_type_id and f.service_id=s.id\n"
                     + "  and rp.id=?";
-            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-            selectStatement.setInt(1, ratePlanId);
-            ResultSet res = selectStatement.executeQuery();
+            pst = conn.prepareStatement(sQuery);
+            pst.setInt(1, ratePlanId);
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
                 pakage.put(res.getString("service"), res.getInt("amount"));
 
             }
-            selectStatement.close();
+            pst.close();
 
             return pakage;
         } catch (Exception e) {
@@ -192,10 +198,10 @@ public class DatabaseManagement {
         Double price = 0.0;
         try {
             String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? and st.\"type\"=?";
-            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-            selectStatement.setString(1, serviceType);
-            selectStatement.setString(2, serviceDestination);
-            ResultSet res = selectStatement.executeQuery();
+            pst = conn.prepareStatement(sQuery);
+            pst.setString(1, serviceType);
+            pst.setString(2, serviceDestination);
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
                 price = res.getDouble("price");
 
@@ -213,10 +219,10 @@ public class DatabaseManagement {
         Double price = 0.0;
         try {
             String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? ";
-            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-            selectStatement.setString(1, serviceType);
+            pst = conn.prepareStatement(sQuery);
+            pst.setString(1, serviceType);
 
-            ResultSet res = selectStatement.executeQuery();
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
                 price = res.getDouble("price");
 
@@ -228,5 +234,90 @@ public class DatabaseManagement {
         }
 
         return -1.0;
+    }
+
+    public AdditionalCharges getAdditionalcharges(String msisdn) {
+
+        AdditionalCharges charges = new AdditionalCharges();
+
+        try {
+
+            String query = "SELECT c.one_time,c.recurring, n.price as non_rating FROM contract c  , rateplan rp ,non_rating n where rp.id=c.rateplan_id and rp.non_rating_id=n.id and msisdn=?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, msisdn);
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                double non_rating = rs.getDouble("non_rating");
+                double one_time = rs.getDouble("one_time");
+                double recurring = rs.getDouble("recurring");
+
+                charges.setOne_time(one_time);
+                charges.setRecurring(recurring);
+                charges.setNon_rating(non_rating);
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println("error");
+        }
+        return charges;
+
+    }
+
+    public Double getRatePlanPrice(int rateplanid) {
+        try {
+
+            String query = "SELECT price from rateplan WHERE id=?;";
+            pst = conn.prepareStatement(query);
+            pst.setInt(1, rateplanid);
+
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                return rs.getDouble("price");
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        }
+        return -1.0;
+    }
+
+    public Date getBillCycle(String msisdn) {
+        try {
+            String sQuery = "select bill_cycle  from contract where msisdn=?";
+            pst = conn.prepareStatement(sQuery);
+            pst.setString(1, msisdn);
+            ResultSet res = pst.executeQuery();
+            while (res.next()) {
+                return res.getDate("bill_cycle");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "kkk");
+        }
+
+        return null;
+    }
+
+    public void insertIntoBilling(User u) {
+        try {
+            Date d = getBillCycle(u.getMsisdn());
+            pst = conn.prepareStatement("INSERT INTO billing(msisdn,ratePlanid,ratePlanPrice,extraCharges,oneTimeFee,recurring,nonrating,billdate) values(?,?,?,?,?,?,?,?)");
+            pst.setString(1, u.getMsisdn());
+            pst.setInt(2, u.getRatePlanId());
+            pst.setDouble(3, u.getRatePlanPrice());
+            pst.setDouble(4, u.getExtraCharges());
+            pst.setDouble(5, u.getOne_time());
+            pst.setDouble(6, u.getRecurring());
+            pst.setDouble(7, u.getNon_rating());
+            pst.setDate(8, d);
+            int x = pst.executeUpdate();
+            System.out.println(x);
+        } catch (SQLException e) {
+            System.out.println(e.fillInStackTrace());
+        }
     }
 }
