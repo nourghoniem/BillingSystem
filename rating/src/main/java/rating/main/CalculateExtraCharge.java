@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package rating.model;
+package rating.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import rating.database.DatabaseManagement;
+import rating.model.User;
 
 /**
  *
@@ -14,13 +15,10 @@ import rating.database.DatabaseManagement;
  */
 public class CalculateExtraCharge {
 
-    private static DatabaseManagement database = new DatabaseManagement();
-    private static ArrayList<User> users = database.getUsers();
     private static Double extraCharge = 0.0;
-    
-    
-    public static ArrayList<User> Calculations() {
 
+    public static ArrayList<User> Calculations(DatabaseManagement database) {
+        ArrayList<User> users = database.getUsers();
         ArrayList<User> usersInfo = new ArrayList<User>();
         for (User user : users) {
             System.out.println(user.getRatePlanId());
@@ -31,15 +29,15 @@ public class CalculateExtraCharge {
             user.setNon_rating(database.getAdditionalcharges(user.getMsisdn()).getNon_rating());
             user.setRecurring(database.getAdditionalcharges(user.getMsisdn()).getRecurring());
             user.setRatePlanPrice(database.getRatePlanPrice(user.getRatePlanId()));
-            
-            user.setExtraCharges(getServiceExteraCharge(user));
+
+            user.setExtraCharges(getServiceExteraCharge(user, database));
             usersInfo.add(user);
-            
+
         }
         return usersInfo;
     }
 
-    private static Double getServiceExteraCharge(User u) {
+    private static Double getServiceExteraCharge(User u, DatabaseManagement database) {
         HashMap<String, Integer> bundle = u.getBundle();
         HashMap<String, Integer> freeUnits = u.getFreeUnits();
         Double amountUsed = 0.0;
@@ -54,14 +52,14 @@ public class CalculateExtraCharge {
                         if (bundle.get(service) - amountUsed + freeUnits.get(service) >= 0) {
                             extraCharge += 0;
                         } else {
-                            extraCharge += Math.abs(bundle.get(service) - amountUsed + freeUnits.get(service)) * CalculateExtraCharge.getServiePrice(service);
+                            extraCharge += Math.abs(bundle.get(service) - amountUsed + freeUnits.get(service)) * CalculateExtraCharge.getServiePrice(service, database);
                         }
                     } else {
-                        extraCharge += Math.abs(bundle.get(service) - amountUsed) * CalculateExtraCharge.getServiePrice(service);
+                        extraCharge += Math.abs(bundle.get(service) - amountUsed) * CalculateExtraCharge.getServiePrice(service, database);
                     }
                 }
             } else {
-                extraCharge += amountUsed * CalculateExtraCharge.getServiePrice(service);
+                extraCharge += amountUsed * CalculateExtraCharge.getServiePrice(service, database);
             }
 
         }
@@ -69,7 +67,7 @@ public class CalculateExtraCharge {
         return extraCharge;
     }
 
-    private static Double getServiePrice(String service) {
+    private static Double getServiePrice(String service, DatabaseManagement database) {
 
         Double price = 0.0;
         try {

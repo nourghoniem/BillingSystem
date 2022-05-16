@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import rating.model.AdditionalCharges;
@@ -79,7 +77,7 @@ public class DatabaseManagement {
                     pst.setDouble(8, r.getVoice_international());
                     pst.setDouble(9, r.getCdr_id());
                     Date date = Date.valueOf(r.getDate());
-                    pst.setDate(10, date );
+                    pst.setDate(10, date);
                     int rows = pst.executeUpdate();
 
                 }
@@ -180,14 +178,14 @@ public class DatabaseManagement {
                     + " from free_units f ,service_type st,rateplan rp ,service s\n"
                     + " where rp.free_unit_id=f.id and st.id = f.service_package_type_id and f.service_id=s.id\n"
                     + "  and rp.id=?";
-            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-            selectStatement.setInt(1, ratePlanId);
-            ResultSet res = selectStatement.executeQuery();
+            pst = conn.prepareStatement(sQuery);
+            pst.setInt(1, ratePlanId);
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
                 pakage.put(res.getString("service"), res.getInt("amount"));
 
             }
-            selectStatement.close();
+            pst.close();
 
             return pakage;
         } catch (Exception e) {
@@ -200,10 +198,10 @@ public class DatabaseManagement {
         Double price = 0.0;
         try {
             String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? and st.\"type\"=?";
-            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-            selectStatement.setString(1, serviceType);
-            selectStatement.setString(2, serviceDestination);
-            ResultSet res = selectStatement.executeQuery();
+            pst = conn.prepareStatement(sQuery);
+            pst.setString(1, serviceType);
+            pst.setString(2, serviceDestination);
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
                 price = res.getDouble("price");
 
@@ -221,10 +219,10 @@ public class DatabaseManagement {
         Double price = 0.0;
         try {
             String sQuery = "select i.price  from interval_module i, service s, service_type st where i.service_id=s.id and i.service_type_id=st.id and s.event_type=? ";
-            PreparedStatement selectStatement = conn.prepareStatement(sQuery);
-            selectStatement.setString(1, serviceType);
+            pst = conn.prepareStatement(sQuery);
+            pst.setString(1, serviceType);
 
-            ResultSet res = selectStatement.executeQuery();
+            ResultSet res = pst.executeQuery();
             while (res.next()) {
                 price = res.getDouble("price");
 
@@ -244,7 +242,7 @@ public class DatabaseManagement {
 
         try {
 
-            String query = "SELECT j.price as non_rating, w.id as rateplan, r.price as recurring, o.price as one_time, c.msisdn FROM contract as c inner join one_time_service as o on o.id=c.one_time inner join recurring_service as r on c.recurring=r.id  inner join rateplan as w on w.id=c.rateplan_id inner join non_rating as j on w.non_rating_id=j.id WHERE msisdn=?;";
+            String query = "SELECT c.one_time,c.recurring, n.price as non_rating FROM contract c  , rateplan rp ,non_rating n where rp.id=c.rateplan_id and rp.non_rating_id=n.id and msisdn=?";
             pst = conn.prepareStatement(query);
             pst.setString(1, msisdn);
 
@@ -269,22 +267,57 @@ public class DatabaseManagement {
 
     }
 
-    public  Double getRatePlanPrice(int rateplanid) {
+    public Double getRatePlanPrice(int rateplanid) {
         try {
-           
+
             String query = "SELECT price from rateplan WHERE id=?;";
             pst = conn.prepareStatement(query);
             pst.setInt(1, rateplanid);
 
             rs = pst.executeQuery();
-            while (rs.next()){
-            return rs.getDouble("price");
-            
+            while (rs.next()) {
+                return rs.getDouble("price");
+
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
 
         }
         return -1.0;
+    }
+
+    public Date getBillCycle(String msisdn) {
+        try {
+            String sQuery = "select bill_cycle  from contract where msisdn=?";
+            pst = conn.prepareStatement(sQuery);
+            pst.setString(1, msisdn);
+            ResultSet res = pst.executeQuery();
+            while (res.next()) {
+                return res.getDate("bill_cycle");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "kkk");
+        }
+
+        return null;
+    }
+
+    public void insertIntoBilling(User u) {
+        try {
+            Date d = getBillCycle(u.getMsisdn());
+            pst = conn.prepareStatement("INSERT INTO billing(msisdn,ratePlanid,ratePlanPrice,extraCharges,oneTimeFee,recurring,nonrating,billdate) values(?,?,?,?,?,?,?,?)");
+            pst.setString(1, u.getMsisdn());
+            pst.setInt(2, u.getRatePlanId());
+            pst.setDouble(3, u.getRatePlanPrice());
+            pst.setDouble(4, u.getExtraCharges());
+            pst.setDouble(5, u.getOne_time());
+            pst.setDouble(6, u.getRecurring());
+            pst.setDouble(7, u.getNon_rating());
+            pst.setDate(8, d);
+            int x = pst.executeUpdate();
+            System.out.println(x);
+        } catch (SQLException e) {
+            System.out.println(e.fillInStackTrace());
+        }
     }
 }
