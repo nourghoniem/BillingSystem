@@ -44,8 +44,7 @@ public class GetCustomers extends HttpServlet {
 "                                        </tr>";
                  s.add(result); 
              }
-            System.out.println("none");
-            System.out.println(s);
+       
         }else{
           
              List<Customer> customers_search = customerHandler.getCustomersSearch(check);
@@ -63,8 +62,6 @@ public class GetCustomers extends HttpServlet {
                s.add(result);
                
              }
-           System.out.println("not null");
-           System.out.println(s);
         }
        out.println(s);
     }

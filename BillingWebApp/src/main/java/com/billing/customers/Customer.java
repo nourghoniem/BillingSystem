@@ -19,8 +19,8 @@ public class Customer {
     private int rateplan_id;
     private String rateplan_name;
     private LocalDate creation_date;
-    private int recurring_id;
-    private int onetime_id;
+    private int recurring = 0;
+    private int onetime = 0;
     private LocalDate bill_cycle;
     
     public Customer(){}
@@ -34,16 +34,26 @@ public class Customer {
         this.bill_cycle = bill_cycle;
     }
     
+     public Customer(String name, String email, String msisdn, String rateplan_name, LocalDate bill_cycle, int recurring, int onetime) {
+        this.name = name;
+        this.email = email;
+        this.msisdn = msisdn;
+        this.rateplan_name = rateplan_name;
+        this.bill_cycle = bill_cycle;
+        this.onetime = onetime;
+        this.recurring = recurring;
+    }
+    
     
 
-    public Customer(String name, String email, String msisdn, int rateplan_id, LocalDate creation_date, int recurring_id, int onetime_id, LocalDate bill_cycle) {
+    public Customer(String name, String email, String msisdn, int rateplan_id, LocalDate creation_date, int recurring, int onetime, LocalDate bill_cycle) {
         this.name = name;
         this.email = email;
         this.msisdn = msisdn;
         this.rateplan_id = rateplan_id;
         this.creation_date = creation_date;
-        this.recurring_id = recurring_id;
-        this.onetime_id = onetime_id;
+        this.recurring = recurring;
+        this.onetime = onetime;
         this.bill_cycle = bill_cycle;
     }
 
@@ -103,20 +113,20 @@ public class Customer {
         this.creation_date = creation_date;
     }
 
-    public int getRecurring_id() {
-        return recurring_id;
+    public int getRecurring() {
+        return recurring;
     }
 
-    public void setRecurring_id(int recurring_id) {
-        this.recurring_id = recurring_id;
+    public void setRecurring(int recurring) {
+        this.recurring = recurring;
     }
 
-    public int getOnetime_id() {
-        return onetime_id;
+    public int getOnetime() {
+        return onetime;
     }
 
-    public void setOnetime_id(int onetime_id) {
-        this.onetime_id = onetime_id;
+    public void setOnetime(int onetime) {
+        this.onetime = onetime;
     }
 
     public LocalDate getBill_cycle() {

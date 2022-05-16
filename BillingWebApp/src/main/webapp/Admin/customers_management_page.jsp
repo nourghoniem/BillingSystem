@@ -417,12 +417,12 @@
                                                         </div>
                                                         <div>
                                                             <label for="rprice" style="padding-top: 20px; position: relative; left: 10px">Recurring Service</label>
-                                                            <input type="text" style="width: 100px; position: relative; left: 10px" class="form-control input-sm" id="rprice" required="" name="rprice" placeholder="100LE">
+                                                            <input type="text" style="width: 100px; position: relative; left: 10px" class="form-control input-sm" id="rprice" name="rprice" placeholder="100LE">
                                                             <p id="rpriceval" style="color: red; display:none;"></p>
                                                         </div>
                                                         <div>
                                                             <label for="oprice" style="padding-top: 20px; position: relative; left: 10px">One-time Service</label>
-                                                            <input type="text" style="width: 100px; position: relative; left: 10px" class="form-control input-sm" id="oprice" required="" name="oprice" placeholder="100LE">
+                                                            <input type="text" style="width: 100px; position: relative; left: 10px" class="form-control input-sm" id="oprice" name="oprice" placeholder="100LE">
                                                             <p id="opriceval" style="color: red; display:none;"></p>
                                                         </div>
                                                     </div>
@@ -440,10 +440,11 @@
                                                 $("#add_customer_submit").click(function (event) {
                                                     event.preventDefault();
                                                     var regex = /^(\+|-)?(\d*\.?\d*)$/;
-                                                    var emailregex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/;
+                                                    var emailregex = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
                                                     var msisdn_regex = /^(\d{14})$/;
                                                     var name_regex = /^(?![\s.]+$)[a-zA-Z\s.]*$/
                                                     var name = $('#name').val();
+                                                    var bill_cycle = $('#bill_cycle').val();
                                                     var email = $('#email').val();
                                                     var msisdn = $('#msisdn').val();
                                                     var rateplan = $('#rateplan').val();
@@ -472,28 +473,22 @@
                                                                 $('#emailval').hide();
                                                             }
                                                         }
-                                                        if (recurring == '') {
-                                                            $('#rpriceval').text("recurring should not be empty..");
-                                                            $('#rpriceval').show();
-                                                        } else {
+                                                      
                                                             if (!regex.test(recurring)) {
                                                                 $('#rpriceval').text("recurring should be a number..");
                                                                 $('#rpriceval').show();
                                                             } else {
                                                                 $('#rpriceval').hide();
                                                             }
-                                                        }
-                                                        if (one_time == '') {
-                                                            $('#opriceval').text("one time should not be empty..");
-                                                            $('#opriceval').show();
-                                                        } else {
+                                                        
+                                                        
                                                             if (!regex.test(one_time)) {
                                                                 $('#opriceval').text("one time should be a number..");
                                                                 $('#opriceval').show();
                                                             } else {
                                                                 $('#opriceval').hide();
                                                             }
-                                                        }
+                                                        
                                                         if (msisdn == '') {
                                                             $('#msisdnval').text("msisdn should not be empty..");
                                                             $('#msisdnval').show();
@@ -518,22 +513,28 @@
 
                                                             url: "${pageContext.request.contextPath}/AddCustomer",
                                                             data: {
-                                                                name: name
+                                                                name: name,
+                                                                email: email,
+                                                                msisdn: msisdn,
+                                                                rateplan: rateplan,
+                                                                recurring: recurring,
+                                                                one_time: one_time,
+                                                                bill_cycle: bill_cycle
+                                                                     
                                                             },
 
                                                             success: function (data) {
-                                                                alert(data);
 
-//                                                                $('#success-message').show();
-//                                                                $("#add_product_submit").prop("disabled", true);
-//                                                                setTimeout(function () {
-//
-//                                                                    $('#addProductModal.modal.fade.show').hide();
-//                                                                    $('body').removeClass('modal-open');
-//                                                                    $('.modal-backdrop').remove();
-//
-//
-//                                                                }, 2000);
+                                                                $('#success-message').show();
+                                                                $("#add_product_submit").prop("disabled", true);
+                                                                setTimeout(function () {
+
+                                                                    $('#addProductModal.modal.fade.show').hide();
+                                                                    $('body').removeClass('modal-open');
+                                                                    $('.modal-backdrop').remove();
+
+
+                                                                }, 2000);
 
                                                             },
                                                             error: function (resp) {
@@ -592,7 +593,6 @@
 
                                                     success: function (data) {
                                                         $("#tbodyid").empty();
-                                                       
                                                         $("#tbodyid").html(data);
 
                                                     },
