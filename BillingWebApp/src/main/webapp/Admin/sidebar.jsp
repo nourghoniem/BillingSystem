@@ -42,7 +42,7 @@
                  Up Streams
                 </div>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="UploadCdr.jsp">
                         <i class="fas fa fa-folder-open-o"></i>
                         <span>Upload CDR</span></a>
                 </li>
