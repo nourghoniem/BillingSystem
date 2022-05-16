@@ -40,8 +40,9 @@ public class AddCustomer extends HttpServlet {
         Customer customer = new Customer(name, email, msisdn, rateplan, date, recurring, one_time);
         CustomerHandler customerHandler = CustomerHandler.getRatePlanHanlder();
         int customer_id = customerHandler.addCustomer(customer);
-        out.println(customer_id);
-//        customerHandler.addContract(customer, customer_id);
+        System.out.println("*************************************************");
+        System.out.println(customer_id);
+        customerHandler.addContract(customer, customer_id);
         
         
         

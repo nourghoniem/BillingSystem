@@ -87,21 +87,24 @@ public class CustomerHandler {
     }
 
     public int addCustomer(Customer c) {
-        int id = -1;
+        int id = 0;
         try {
 
-            String SQL = "INSERT INTO customer (name, email) VALUES(?,?)";
+            String SQL = "INSERT INTO customer (name, email) VALUES(?,?);";
             pst = dbconnection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, c.getName());
             pst.setString(2, c.getEmail());
-
-            int rows = pst.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
+            pst.executeUpdate();
+            rs = pst.getGeneratedKeys();
+          
+            while(rs.next()) {
                 id = rs.getInt(1);
             }
+            
+            dbconnection.commit();
+            
             pst.close();
-            System.out.print(rows);
+          
         } catch (Exception e) {
             e.getMessage();
         }
@@ -111,8 +114,8 @@ public class CustomerHandler {
     public void addContract(Customer c, int customer_id) {
         try {
             int id = getRateplan_id(c.getRateplan_name());
-         
-            pst = dbconnection.prepareStatement("INSERT INTO contract (msisdn, rateplan_id, customer_id, creation_date, bill_cycle, recurring, one_time) VALUES(?,?,?,?,?,?,?)");
+            System.out.print(id);
+            pst = dbconnection.prepareStatement("INSERT INTO contract (msisdn, rateplan_id, customer_id, creation_date, bill_cycle, recurring, one_time) VALUES(?,?,?,?,?,?,?);");
             pst.setString(1, c.getMsisdn());
             pst.setInt(2, id);
             pst.setInt(3, customer_id);
@@ -124,6 +127,7 @@ public class CustomerHandler {
             pst.setInt(7, c.getOnetime());
           
             int rows = pst.executeUpdate();
+            dbconnection.commit();
             pst.close();
             System.out.print(rows);
         } catch (Exception e) {
