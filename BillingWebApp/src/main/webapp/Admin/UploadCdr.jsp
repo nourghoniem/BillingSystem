@@ -48,10 +48,10 @@
                              <div id='progress-bar-container' style='height: 40px;border: 1px solid #9a9a9a;'>
 			<div id='progress-bar' style='height: 100%; background: #4e73df; width: 0%;height: 40px'></div>
                              </div></div>
-                         
+                         <div id="uploding-file"></div>
                         
 		</div>
-		<div id="uploding-file"></div>
+		
 
 
                     </form>
@@ -103,14 +103,14 @@
         </div>
 
         <!-- Bootstrap core JavaScript-->
-        <script src="asset/vendor/jquery/jquery.min.js"></script>
-        <script src="asset/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
         <!-- Core plugin JavaScript-->
-        <script src="asset/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
         <!-- Custom scripts for all pages-->
-        <script src="asset/js/sb-admin-2.min.js"></script>
+        <script src="js/sb-admin-2.min.js"></script>
         <script> 
        	/* Globle variables */
 	var totalFileSize, totalUploadedSize, totalFileCount, fileUploadedCount;
@@ -118,7 +118,11 @@
 	/* start uploading files */
 	function startUploading() {
 		var files=document.getElementById('files').files;
+          
 		totalFileCount = files.length;
+                if (totalFileCount<=0){
+                    alert("you have to choose at least one file");
+                }else{
 		totalUploadedSize = 0;
 		fileUploadedCount = 0;
 		totalFileSize = 0;		
@@ -126,7 +130,7 @@
 			totalFileSize += files[i].size;
 		}
 		// upload through ajax call
-		uploadFile();
+		uploadFile();}
 	}
 	
 	/* one by one file will be uploaded to the server by ajax call*/
@@ -138,7 +142,7 @@
 		xhr.upload.addEventListener("progress", onUploadProgress, false);
 		xhr.addEventListener("load", onUploadComplete, false);
 		xhr.addEventListener("error", onUploadError, false);
-		xhr.open("POST", "HandlingUpload");
+		xhr.open("POST", "/BillingWebApp/HandlingUpload");
 		xhr.send(fd);
 		// update which file is uploading
 		document.getElementById('uploding-file').innerHTML="Uploading "+file.name;
@@ -147,10 +151,11 @@
 	/* This function will continueously update the progress bar */
 	function onUploadProgress(e) {
 		if (e.lengthComputable) {
-			var percentComplete = parseInt((e.loaded + totalUploadedSize) * 100	/ totalFileSize);
+			var percentComplete = parseInt((e.loaded + totalUploadedSize)	/ totalFileSize);
 			var bar = document.getElementById('progress-bar');
-			bar.style.width = percentComplete + '%';
-			bar.innerHTML = percentComplete + ' % complete';
+			bar.style.width = percentComplete.toString() + '%';
+			bar.innerHTML = percentComplete.toString() + ' % complete';
+                       
 		} else {
 			alert('unable to compute');
 		}

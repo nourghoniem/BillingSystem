@@ -88,6 +88,6 @@ public class RatePlanHandler {
 
     public static void main(String[] args) {
 
-        ratePlanHandlerInstance.AddServiceRatePlan(new RatePlan(1,1,1,"test", 500));
+        ratePlanHandlerInstance.AddServiceRatePlan(new RatePlan(1, 1, 1, "test", 500));
     }
 }

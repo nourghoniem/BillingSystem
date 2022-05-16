@@ -16,19 +16,19 @@ import java.util.logging.Logger;
  * @author Michael Ramez
  */
 public class ServicePackageHandler {
-    
+
     private static final ServicePackageHandler servicePackageHandlerInstance = new ServicePackageHandler();
     private final Connection dbconnection;
-    
-    private ServicePackageHandler(){
+
+    private ServicePackageHandler() {
         dbconnection = DB_Connection.getDatabaseInstance().getConnection();
     }
-    
-    public static ServicePackageHandler getServicePackageHandler(){
+
+    public static ServicePackageHandler getServicePackageHandler() {
         return servicePackageHandlerInstance;
     }
-    
-    public void AddServicePackage(ServicePackage servicePackage){
+
+    public void AddServicePackage(ServicePackage servicePackage) {
         try {
             String insSP_sql = "insert into service_package(service_id,amount,service_type_id) values(?, ?, ?)";
             PreparedStatement insSP_stm = dbconnection.prepareStatement(insSP_sql);
@@ -49,10 +49,3 @@ public class ServicePackageHandler {
         }
     }
 }
-
-
-
-
-
-
-

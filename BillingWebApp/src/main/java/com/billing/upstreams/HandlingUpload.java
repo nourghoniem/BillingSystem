@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import javax.servlet.http.Part;
  *
  * @author Salma
  */
+@WebServlet("/HandlingUpload")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 500, // 500MB
         maxRequestSize = 1024 * 1024 * 1024)
@@ -81,6 +83,7 @@ public class HandlingUpload extends HttpServlet {
                 part.write(uploadsPath + File.separator + fileName);
             }
             System.out.println("File uploaded successfully!");
+            out.println("done");
         } catch (Exception e) {
             System.err.println("Error while uploading files!");
             e.printStackTrace();

@@ -10,8 +10,8 @@ package com.billing.servicepackage;
  */
 public class ServicePackage {
 
-   private int id, amount;
-   private final int service_id, service_type_id;
+    private int id, amount;
+    private final int service_id, service_type_id;
 
     public ServicePackage(int amount, int service_id, int service_type_id) {
         this.amount = amount;
@@ -49,6 +49,5 @@ public class ServicePackage {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-   
-   
+
 }
