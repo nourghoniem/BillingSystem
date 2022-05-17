@@ -109,6 +109,31 @@ public class RatePlanHandler {
         return rp;
     }
 
+    public List<RatePlan> getNonRatings() {
+        List<RatePlan> nrp = new ArrayList<RatePlan>();
+        RatePlan rp = null;
+        try {
+            String getRPs_sql = "SELECT n.* FROM \"public\".non_rating n";
+
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+            while (getRPs_res.next()) {
+                int ratePlanId = getRPs_res.getInt("id");
+                String ratePlanName = getRPs_res.getString("name");
+                int price = getRPs_res.getInt("price");
+
+                rp = new RatePlan(ratePlanId, ratePlanName, price);
+                nrp.add(rp);
+
+            }
+            return nrp;
+        } catch (SQLException ex) {
+            Logger.getLogger(RatePlanHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
 
         System.out.println(RatePlanHandler.getRatePlanHanlder().getNonRating(1).getName());

@@ -73,7 +73,7 @@ public class ServicePackageHandler {
     public ServicePackage getService(int spid) {
         ServicePackage sp = null;
         try {
-            String getRPs_sql = "select concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from service_package sp ,service s,service_type st  where sp.service_id=s.id and sp.service_type_id=st.id and sp.id=?";
+            String getRPs_sql = "select  concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from service_package sp ,service s,service_type st  where sp.service_id=s.id and sp.service_type_id=st.id and sp.id=?";
             PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
             getRPs_stm.setInt(1, spid);
             ResultSet getRPs_res = getRPs_stm.executeQuery();
@@ -88,21 +88,63 @@ public class ServicePackageHandler {
         return sp;
     }
 
-    public ServicePackage getFreeService(int spid) {
+    public ArrayList<ServicePackage> getServices() {
+        ArrayList<ServicePackage> svpk = new ArrayList<ServicePackage>();
         ServicePackage sp = null;
         try {
-            String getRPs_sql = "select concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from free_units sp ,service s,service_type st  where sp.service_id=s.id and sp.service_package_type_id=st.id and sp.id=?";
+            String getRPs_sql = "select sp.id, concat(s.event_type,'_',st.\"type\") as services ,sp.amount from service_package sp ,service s,service_type st  where sp.service_id=s.id and sp.service_type_id=st.id";
             PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
-            getRPs_stm.setInt(1, spid);
+
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                sp = new ServicePackage(getRPs_res.getInt(1), getRPs_res.getInt(3), getRPs_res.getString(2).split("_")[1], getRPs_res.getString(2).split("_")[0]);
+                svpk.add(sp);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return svpk;
+    }
+
+    public ServicePackage getFreeService(int id) {
+
+        ServicePackage sp = null;
+        try {
+            String getRPs_sql = "select concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from free_units sp ,service s,service_type st  where sp.service_id=s.id and sp.service_package_type_id=st.id and sp.id=? ";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+            getRPs_stm.setInt(1, id);
             ResultSet getRPs_res = getRPs_stm.executeQuery();
 
             while (getRPs_res.next()) {
                 sp = new ServicePackage(getRPs_res.getInt(2), getRPs_res.getString(1).split("_")[1], getRPs_res.getString(1).split("_")[0]);
+
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sp;
+    }
+
+    public ArrayList<ServicePackage> getFreeServices() {
+        ArrayList<ServicePackage> svpk = new ArrayList<ServicePackage>();
+        ServicePackage sp = null;
+        try {
+            String getRPs_sql = "select sp.id,concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from free_units sp ,service s,service_type st  where sp.service_id=s.id and sp.service_package_type_id=st.id ";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                sp = new ServicePackage(getRPs_res.getInt(1), getRPs_res.getInt(3), getRPs_res.getString(2).split("_")[1], getRPs_res.getString(2).split("_")[0]);
+                svpk.add(sp);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return svpk;
     }
 }

@@ -14,6 +14,14 @@ public class ServicePackage {
     private int service_id, service_type_id;
     private String service_destination, service_type;
 
+    public ServicePackage(int id, int amount, String service_destination, String service_type) {
+        this.id = id;
+        this.amount = amount;
+
+        this.service_destination = service_destination;
+        this.service_type = service_type;
+    }
+
     public ServicePackage(int amount, String service_destination, String service_type) {
         this.id = id;
         this.amount = amount;

@@ -22,7 +22,7 @@ $("#card"+value.id).append(xyz);
 function appendRatePlan(value){
     let pid="card"+value.id.toString();
     let rp=`
-                        <div class="col-md-4" id=${value.id}  style="margin-top: 3%;">
+                        <div class="col-md-4" id=${value.id}">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -59,6 +59,7 @@ function appendRatePlan(value){
 }
 
 function getDescription(spvalue){
+   
     let statement="";
     switch(spvalue.service_type){
         case "voice":
@@ -106,7 +107,7 @@ function addOthers(value){
     
    <p style="color:red;display:inline"> FreeUnits </p>
      <hr class="sidebar-divider my-0">
-    <div><i class="fas fa-check"></i><span> ${x}</span></div>`
+    <div><i class="fas fa-check"></i><span> ${x}</span></div>`;
    
     return st;
 }

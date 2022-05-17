@@ -57,7 +57,7 @@
                 
 <!--                                 Nav Item - Pages Collapse Menu -->
                                 <li class="nav-item">
-                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                                    <a class="nav-link " href="#" data-toggle="collapse" data-target="#collapseTwo"
                                        aria-expanded="true" aria-controls="collapseTwo">
                                         <i class="fas fa-fw fa-cog"></i>
                                          <span> Actions </span>
@@ -72,7 +72,7 @@
               
 
          
-                    <a class="collapse-item" href="#">
+                    <a class="collapse-item" href="AddRatePlan.jsp">
                        
                         <span>Add new Rate Plan</span></a>
               
