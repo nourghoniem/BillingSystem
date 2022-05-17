@@ -7,7 +7,10 @@ package com.billing.servicepackage;
 import com.billing.postgresql.DB_Connection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,5 +50,59 @@ public class ServicePackageHandler {
                 Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
+    }
+
+    public List<Integer> getServicePkgs(int rpid) {
+        List<Integer> svp = new ArrayList();
+        try {
+            String getRPs_sql = "select * from service_rateplan where rateplan_id=?";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+            getRPs_stm.setInt(1, rpid);
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                svp.add(getRPs_res.getInt(2));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return svp;
+    }
+
+    public ServicePackage getService(int spid) {
+        ServicePackage sp = null;
+        try {
+            String getRPs_sql = "select concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from service_package sp ,service s,service_type st  where sp.service_id=s.id and sp.service_type_id=st.id and sp.id=?";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+            getRPs_stm.setInt(1, spid);
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                sp = new ServicePackage(getRPs_res.getInt(2), getRPs_res.getString(1).split("_")[1], getRPs_res.getString(1).split("_")[0]);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sp;
+    }
+
+    public ServicePackage getFreeService(int spid) {
+        ServicePackage sp = null;
+        try {
+            String getRPs_sql = "select concat(s.event_type,'_',st.\"type\") as services ,sp.amount  from free_units sp ,service s,service_type st  where sp.service_id=s.id and sp.service_package_type_id=st.id and sp.id=?";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+            getRPs_stm.setInt(1, spid);
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                sp = new ServicePackage(getRPs_res.getInt(2), getRPs_res.getString(1).split("_")[1], getRPs_res.getString(1).split("_")[0]);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sp;
     }
 }

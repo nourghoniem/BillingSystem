@@ -11,7 +11,16 @@ package com.billing.servicepackage;
 public class ServicePackage {
 
     private int id, amount;
-    private final int service_id, service_type_id;
+    private int service_id, service_type_id;
+    private String service_destination, service_type;
+
+    public ServicePackage(int amount, String service_destination, String service_type) {
+        this.id = id;
+        this.amount = amount;
+
+        this.service_destination = service_destination;
+        this.service_type = service_type;
+    }
 
     public ServicePackage(int amount, int service_id, int service_type_id) {
         this.amount = amount;
@@ -48,6 +57,22 @@ public class ServicePackage {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public String getService_destination() {
+        return service_destination;
+    }
+
+    public void setService_destination(String service_destination) {
+        this.service_destination = service_destination;
+    }
+
+    public String getService_type() {
+        return service_type;
+    }
+
+    public void setService_type(String service_type) {
+        this.service_type = service_type;
     }
 
 }

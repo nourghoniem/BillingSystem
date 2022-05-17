@@ -5,6 +5,8 @@
 --%>
 
 
+<%@page import="com.billing.servicepackage.ServicePackage"%>
+<%@page import="com.billing.servicepackage.ServicePackageHandler"%>
 <%@page import="com.google.gson.Gson"%>
 <%@page import="com.google.gson.GsonBuilder"%>
 <%@page import="com.billing.rateplan.RatePlan"%>
@@ -19,10 +21,18 @@
 
 
 <%@include file="header.jsp" %>
-<% RatePlanHandler rp= RatePlanHandler.getRatePlanHanlder();
+<% GsonBuilder gsonBuilder = new GsonBuilder();
+   Gson gson = gsonBuilder.create();
+    RatePlanHandler rp= RatePlanHandler.getRatePlanHanlder();
    List<RatePlan> rps=rp.GetCurrentRatePlans();
-   GsonBuilder gsonBuilder = new GsonBuilder();
-     Gson gson = gsonBuilder.create();
+      for(RatePlan rep:rps){
+         List<Integer> svp=ServicePackageHandler.getServicePackageHandler().getServicePkgs(rep.getId());
+         for(int spid:svp){
+             ServicePackage sp=ServicePackageHandler.getServicePackageHandler().getService(spid);
+             rep.getSp().add(sp);
+         }
+         
+      }
      String rs= gson.toJson(rps);
   %>
     <!-- Page Wrapper -->
@@ -49,8 +59,10 @@
                     </div>
 
                     <div class="row" id="rps">
-
-                        <!-- Earnings (Monthly) Card Example -->
+                       
+                            </div>
+                             
+                      <!-- Earnings (Monthly) Card Example -->
                        
                         <!-- Tasks Card Example -->
                       <div class="row">
@@ -76,6 +88,7 @@
             <script src="js/viewRatePlan.js" type="text/javascript"></script>
                 <script >
                     $("document").ready(function () {
+                        console.log(<%=rs%>);
                                  displayRateplans(<%=rs%>);
                   });
                     

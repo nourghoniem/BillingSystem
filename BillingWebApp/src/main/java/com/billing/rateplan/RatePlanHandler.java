@@ -75,9 +75,9 @@ public class RatePlanHandler {
                 int ratePlanId = getRPs_res.getInt("id");
                 String ratePlanName = getRPs_res.getString("name");
                 int price = getRPs_res.getInt("price");
-//                int nonRatingId = getRPs_res.getInt("non_rating_id");
-//                int freeUnitId = getRPs_res.getInt("free_unit_id");
-                currentRPs.add(new RatePlan(ratePlanId, ratePlanName, price));
+                int nonRatingId = getRPs_res.getInt("non_rating_id");
+                int freeUnitId = getRPs_res.getInt("free_unit_id");
+                currentRPs.add(new RatePlan(ratePlanId, nonRatingId, freeUnitId, price, ratePlanName));
             }
             return currentRPs;
         } catch (SQLException ex) {
@@ -86,8 +86,31 @@ public class RatePlanHandler {
         return currentRPs;
     }
 
+    public RatePlan getNonRating(int rpid) {
+        RatePlan rp = null;
+        try {
+            String getRPs_sql = "SELECT n.* FROM \"public\".non_rating n,rateplan rp where rp.non_rating_id=n.id and rp.id=?";
+
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+            getRPs_stm.setInt(1, rpid);
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+            while (getRPs_res.next()) {
+                int ratePlanId = getRPs_res.getInt("id");
+                String ratePlanName = getRPs_res.getString("name");
+                int price = getRPs_res.getInt("price");
+
+                rp = new RatePlan(ratePlanId, ratePlanName, price);
+
+            }
+            return rp;
+        } catch (SQLException ex) {
+            Logger.getLogger(RatePlanHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rp;
+    }
+
     public static void main(String[] args) {
 
-        ratePlanHandlerInstance.AddServiceRatePlan(new RatePlan(1, 1, 1, "test", 500));
+        System.out.println(RatePlanHandler.getRatePlanHanlder().getNonRating(1).getName());
     }
 }
