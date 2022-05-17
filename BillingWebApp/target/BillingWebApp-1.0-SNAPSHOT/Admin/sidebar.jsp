@@ -76,7 +76,7 @@
                        
                         <span>Add new Rate Plan</span></a>
               
-                    <a class="collapse-item" href="#">
+                    <a class="collapse-item" href="AddServicePkg.jsp">
                        
                         <span>Add Service Package</span></a>
                

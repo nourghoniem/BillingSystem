@@ -44,7 +44,7 @@
                     <h2 class="title">Add RatePlan</h2>
                     <p></p>
                       <p></p>
-                    <form method="POST">
+                    <form method="GET">
                         <div class="row ">
                             <div class="col-4">
                                
@@ -63,27 +63,112 @@
                             </div>
                         <p></P>
                         <hr class="sidebar-divider my-0" style="margin-top: 3%">
-                         <div class="row ">
-                            <div class="col-4">
-                                <p style="display:inline; color: red">Add Service Packages to Rate Plan</p>   
-                               <hr class="sidebar-divider my-0" style="margin-top: 3%">
-                               
-                                <div id="svpk">
+                        <div class="row " >
                             
+                                <span style="display:inline; color: red">Add Service Packages to Rate Plan</span>   
+                                <hr class="sidebar-divider my-0" style="margin-top: 3%"></div>
+                                <p></p>
+                                <div class="row" id="svps" >
+                               <div class="col">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                 Select From Voice Packages</div>
+                                          
+                                            <hr class="sidebar-divider my-0">
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fa fa-phone fa-2x text-gray-300 " aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                     <div class="card mb-4" style=" user-select: auto;border: none;">
+                               
+                                <div  id="voice" style="user-select: auto;">
+                                 
+                                       
+                                        
+                               
+                                </div>
                                 </div>
                             </div>
+                        </div>
+                               </div>
+                           
+                        
+                              
+                                               
+                               <div class="col">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Select From Sms Packages</div>
+                                           
+                                            <hr class="sidebar-divider my-0">
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fa fa-envelope fa-2x text-gray-300 " aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                     <div class="card mb-4" style="margin-top: 2%; user-select: auto;border: none;">
+                               
+                                <div class="card-body details" id="SMS" style="user-select: auto;">
+                                 
+                                       
+                                        
+                               
+                                </div>
+                                </div>
                             </div>
+                        </div>
+                           
+                            </div>
+                             
+                                                
+                               <div class="col">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                 Select From data Packages</div>
+                                         
+                                            <hr class="sidebar-divider my-0">
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fa fa-rss fa-2x text-gray-300 " aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                     <div class="card mb-4" style="margin-top: 2%; user-select: auto;border: none;">
+                               
+                                <div class="card-body details" id="data" style="user-select: auto;">
+                                 
+                                       
+                                        
+                               
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                           
+                            </div>
+                               
+                                </div>
+                                  <p></p>
                         <div class="row ">
                             <div class="col-4">
                                 <p style="display:inline; color: red">Add freeUnits to Rate Plan</p>   
                                <hr class="sidebar-divider my-0" style="margin-top: 3%">
-                               
+                                 <p></p>
                                 <div id="fpk">
                             
                                 </div>
                             </div>
                             </div>
-                        
+                          <p></p>
                               <div class="row ">
                             <div class="col-4">
                                 <p style="display:inline; color: red">Add Other Services</p>   
@@ -94,13 +179,14 @@
                                 </div>
                             </div>
                             </div>
-                          <div class="row ">
-                              <input type="submit" value="Add New Rate Plan" class="btn btn-primary btn-icon-split" />
+                            <p></p>
+                          <div class="row " style="user-select: auto;justify-content: center;">
+                              <input type="submit" value="Add New Rate Plan" class="btn btn-primary btn-icon-split btn-lg" style="user-select: auto;justify-content: center;">
                             </div>
                         
                     </form>
                 </div>
-            </div>
+            
       
                     <!-- /.container-fluid -->
                     <label id="uplStatus" style="display: none"></label>
@@ -150,7 +236,8 @@
        
         <script>
             $("document").ready(function(){
-                 getServices(<%=servicePkgs %>);
+                console.log(<%=servicePkgs%>);
+                Dis(<%=servicePkgs%>);
             getFreeUnits(<%=freeUnits%>);
             getnonRating(<%=nonrating %>);
                 

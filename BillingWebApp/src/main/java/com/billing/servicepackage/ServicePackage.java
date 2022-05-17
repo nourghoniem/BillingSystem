@@ -43,6 +43,10 @@ public class ServicePackage {
         this.service_type_id = service_type_id;
     }
 
+    ServicePackage() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -81,6 +85,14 @@ public class ServicePackage {
 
     public void setService_type(String service_type) {
         this.service_type = service_type;
+    }
+
+    public void setService_id(int service_id) {
+        this.service_id = service_id;
+    }
+
+    public void setService_type_id(int service_type_id) {
+        this.service_type_id = service_type_id;
     }
 
 }

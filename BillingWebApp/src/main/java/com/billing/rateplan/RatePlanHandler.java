@@ -5,6 +5,7 @@
 package com.billing.rateplan;
 
 import com.billing.postgresql.DB_Connection;
+import com.billing.servicepackage.ServicePackageHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -136,6 +137,6 @@ public class RatePlanHandler {
 
     public static void main(String[] args) {
 
-        System.out.println(RatePlanHandler.getRatePlanHanlder().getNonRating(1).getName());
+        System.out.println(ServicePackageHandler.getServicePackageHandler().getAllEventTypes());
     }
 }

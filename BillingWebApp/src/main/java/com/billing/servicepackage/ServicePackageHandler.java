@@ -147,4 +147,51 @@ public class ServicePackageHandler {
         }
         return svpk;
     }
+
+    public ArrayList<ServicePackage> getAllEventTypes() {
+        ArrayList<ServicePackage> evt = new ArrayList<ServicePackage>();
+
+        try {
+            String getRPs_sql = "SELECT s.id,s.event_type  FROM service s";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                ServicePackage sp = new ServicePackage();
+                sp.setService_id(getRPs_res.getInt("id"));
+                sp.setService_type(getRPs_res.getString("event_type"));
+                evt.add(sp);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return evt;
+
+    }
+
+    public ArrayList<ServicePackage> getAllZonePkg() {
+        ArrayList<ServicePackage> zpkg = new ArrayList<ServicePackage>();
+
+        try {
+            String getRPs_sql
+                    = "select st.id,st.\"type\" from service_type st ";
+            PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
+
+            ResultSet getRPs_res = getRPs_stm.executeQuery();
+
+            while (getRPs_res.next()) {
+                ServicePackage sp = new ServicePackage();
+                sp.setService_id(getRPs_res.getInt(1));
+                sp.setService_type(getRPs_res.getString(2));
+                zpkg.add(sp);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicePackageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return zpkg;
+
+    }
 }
