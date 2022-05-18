@@ -55,6 +55,8 @@ public class CustomerHandler {
         }
         return date;
     }
+    
+  
 
     public List<Customer> getCustomers() {
         customers = new ArrayList<Customer>();

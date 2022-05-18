@@ -3,6 +3,8 @@
     Created on : Mar 12, 2022, 10:37:41 PM
     Author     : nour
 --%>
+<%@page import="com.billing.rateplan.RatePlan"%>
+<%@page import="com.billing.rateplan.RatePlanHandler"%>
 <%@page import="com.billing.customers.Customer"%>
 <%@page import="com.billing.customers.CustomerHandler"%>
 <%@page import="java.nio.file.Paths"%>
@@ -12,7 +14,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     CustomerHandler customerHandler = CustomerHandler.getRatePlanHanlder();
+    RatePlanHandler rateplanHandler = RatePlanHandler.getRatePlanHanlder();
     List<Customer> customers = customerHandler.getCustomers();
+    List<RatePlan> rateplans = rateplanHandler.GetCurrentRatePlans();
 %>
 
 <!DOCTYPE html>
@@ -98,9 +102,9 @@
                                                     <label for="rateplan">Rateplan</label>
                                                     <select class="form-control input-sm"  required="" id="rateplan" name="rateplan">
                                                         <option></option>
-                                                        <%                                            for (Customer c : customers) {
+                                                        <%                                            for (RatePlan r : rateplans) {
                                                         %>
-                                                        <option><%=c.getRateplan_name()%></option>  
+                                                        <option><%= r.getName()%></option>  
 
                                                         <%}%>
                                                     </select>
