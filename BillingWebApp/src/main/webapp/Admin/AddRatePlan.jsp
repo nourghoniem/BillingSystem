@@ -57,7 +57,7 @@
                                
  
                                     
-                                   <input type="text" id="search_input" class="form-control bg-light border-0 small" placeholder="Enter Price" aria-label="Search" aria-describedby="basic-addon2" name="rpPrice" required="">
+                                   <input type="number" id="search_input" class="form-control bg-light border-0 small" placeholder="Enter Price" aria-label="Search" aria-describedby="basic-addon2" name="rpPrice" required="">
                                 
                             </div>
                             </div>
