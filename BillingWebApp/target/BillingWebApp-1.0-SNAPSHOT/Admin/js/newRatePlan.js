@@ -29,8 +29,8 @@ function getStatement(value){
                  let stmt="";
       $.getScript("js/viewRatePlan.js", function () {
         stmt+=getDescription(value);
-         let elem=`<br><input type="checkbox"  name=${value.service_type} value=${value.id}>
-                               <label for=${value.service_type}> ${value.amount+" "+stmt}</label>`;
+         let elem=`<br><input type="checkbox"  name=svpid value=${value.id}>
+                               <label for=svpid> ${value.amount+" "+stmt}</label>`;
           
         $("#"+value.service_type).append(elem);
     });    
