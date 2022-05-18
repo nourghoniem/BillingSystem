@@ -30,8 +30,7 @@ public class AddCustomer extends HttpServlet {
         String email = request.getParameter("email");
         String msisdn = request.getParameter("msisdn");
         String rateplan = request.getParameter("rateplan");
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-dd");
-       
+      
         String bill_cycle = request.getParameter("bill_cycle");
         String[] columns = bill_cycle.split("-");
         Integer recurring = Integer.parseInt(request.getParameter("recurring"));
@@ -40,8 +39,6 @@ public class AddCustomer extends HttpServlet {
         Customer customer = new Customer(name, email, msisdn, rateplan, date, recurring, one_time);
         CustomerHandler customerHandler = CustomerHandler.getRatePlanHanlder();
         int customer_id = customerHandler.addCustomer(customer);
-        System.out.println("*************************************************");
-        System.out.println(customer_id);
         customerHandler.addContract(customer, customer_id);
         
         

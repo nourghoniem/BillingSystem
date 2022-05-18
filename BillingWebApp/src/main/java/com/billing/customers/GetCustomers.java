@@ -39,8 +39,7 @@ public class GetCustomers extends HttpServlet {
 "                                            <td>"+c.getMsisdn()+"</td>\n" +
 "                                            <td>"+c.getEmail()+"</td>\n" +
 "                                            <td>"+c.getRateplan_name()+"</td>\n" +
-"                                            <td>"+c.getBill_cycle()+"</td>\n" +
-"                                            <td></td>\n" +
+"                                            <td>"+c.getBill_cycle()+"</td>\n" +                                         
 "                                        </tr>";
                  s.add(result); 
              }
@@ -56,7 +55,7 @@ public class GetCustomers extends HttpServlet {
 "                                            <td>"+c.getEmail()+"</td>\n" +
 "                                            <td>"+c.getRateplan_name()+"</td>\n" +
 "                                            <td>"+c.getBill_cycle()+"</td>\n" +
-"                                            <td></td>\n" +
+
 "                                        </tr>";
               
                s.add(result);

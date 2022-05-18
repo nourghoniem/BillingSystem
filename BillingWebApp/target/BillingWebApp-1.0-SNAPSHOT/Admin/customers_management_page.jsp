@@ -235,9 +235,9 @@
                                                     }
                                                 });
 
-//                                                $(document).ajaxStop(function () {
-//                                                    window.location.reload();
-//                                                });
+                                                $(document).ajaxStop(function () {
+                                                    window.location.reload();
+                                                });
 
                                             });
                                         </script>
@@ -259,7 +259,7 @@
                                             <th>Email</th>
                                             <th>Rateplan</th>
                                             <th>Bill Cycle</th>
-                                            <th>Action</th>
+                                  
                                         </tr>
                                     </thead>
                                     <script>
@@ -306,7 +306,7 @@
                                             <td><% out.println(c.getEmail()); %></td>
                                             <td><% out.println(c.getRateplan_name()); %></td>
                                             <td><% out.println(c.getBill_cycle()); %></td>
-                                            <td></td>
+                                  
                                         </tr>
                                         <% }%>
                                     </tbody>

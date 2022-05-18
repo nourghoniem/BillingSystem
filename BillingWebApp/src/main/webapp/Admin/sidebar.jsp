@@ -41,7 +41,7 @@
                     Manage Users
                 </div>
                 <li class="nav-item">
-                    <a class="nav-link" href="client_management_page.jsp">
+                    <a class="nav-link" href="customers_management_page.jsp">
                        <i class="fas fa-group" ></i>
                         <span>Users</span></a>
                 </li>

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -36,6 +37,23 @@ public class CustomerHandler {
 
     public static CustomerHandler getRatePlanHanlder() {
         return customerHandlerInstance;
+    }
+
+    public Date getCreationDate() {
+        java.sql.Date sqldate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+        Date date = sqldate;
+        try {
+            stmt = dbconnection.createStatement();
+            String SQL = "SELECT CURRENT_DATE;";
+            rs = stmt.executeQuery(SQL);
+             while (rs.next()) {
+                    date = rs.getDate("current_date");
+             
+             }
+
+        } catch (SQLException e) {
+        }
+        return date;
     }
 
     public List<Customer> getCustomers() {
@@ -96,15 +114,15 @@ public class CustomerHandler {
             pst.setString(2, c.getEmail());
             pst.executeUpdate();
             rs = pst.getGeneratedKeys();
-          
-            while(rs.next()) {
+
+            while (rs.next()) {
                 id = rs.getInt(1);
             }
-            
+
             dbconnection.commit();
-            
+
             pst.close();
-          
+
         } catch (Exception e) {
             e.getMessage();
         }
@@ -113,38 +131,40 @@ public class CustomerHandler {
 
     public void addContract(Customer c, int customer_id) {
         try {
-            int id = getRateplan_id(c.getRateplan_name());
-            System.out.print(id);
-            pst = dbconnection.prepareStatement("INSERT INTO contract (msisdn, rateplan_id, customer_id, creation_date, bill_cycle, recurring, one_time) VALUES(?,?,?,?,?,?,?);");
+            Date creation_date = getCreationDate();
+            pst = dbconnection.prepareStatement("INSERT INTO contract (msisdn, rateplan_id, customer_id, creation_date, bill_cycle, recurring, one_time) VALUES (?,?,?,?,?,?,?);");
             pst.setString(1, c.getMsisdn());
+            int id = getRateplan_id(c.getRateplan_name());
+            System.out.print("rateplan id: " + id);
+
             pst.setInt(2, id);
             pst.setInt(3, customer_id);
-            Date creation_date = Date.valueOf(c.getCreation_date());
             Date bill_cycle = Date.valueOf(c.getBill_cycle());
-            pst.setDate(4, creation_date );
+            pst.setDate(4, creation_date);
             pst.setDate(5, bill_cycle);
             pst.setInt(6, c.getRecurring());
             pst.setInt(7, c.getOnetime());
-          
+
             int rows = pst.executeUpdate();
             dbconnection.commit();
+
             pst.close();
             System.out.print(rows);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.getMessage();
         }
 
     }
-    
-    public int getRateplan_id(String rateplan){
+
+    public int getRateplan_id(String rateplan) {
         Integer id = -1;
-         try {
+        try {
             stmt = dbconnection.createStatement();
-            String SQL = " SELECT id FROM rateplan where name='"+rateplan+"'";
+            String SQL = " SELECT id FROM rateplan where name='" + rateplan + "'";
             rs = stmt.executeQuery(SQL);
 
             while (rs.next()) {
-                 id = rs.getInt("id");
+                id = rs.getInt("id");
             }
         } catch (SQLException e) {
             e.printStackTrace();
