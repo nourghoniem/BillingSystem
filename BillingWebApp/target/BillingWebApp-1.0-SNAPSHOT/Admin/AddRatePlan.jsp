@@ -44,20 +44,20 @@
                     <h2 class="title">Add RatePlan</h2>
                     <p></p>
                       <p></p>
-                    <form method="GET">
+                    <form method="GET" onsubmit="valthisform()">
                         <div class="row ">
                             <div class="col-4">
                                
  
                                        
-                                <input type="text" id="search_input" class="form-control bg-light border-0 small" placeholder="Enter Rate Plan Name" aria-label="Search" aria-describedby="basic-addon2" name="rpName">
+                                <input type="text" id="search_input" class="form-control bg-light border-0 small" placeholder="Enter Rate Plan Name" aria-label="Search" aria-describedby="basic-addon2" name="rpName" required>
                                 
                             </div>
                                <div class="col-4">
                                
  
                                     
-                                <input type="text" id="search_input" class="form-control bg-light border-0 small" placeholder="Enter Price" aria-label="Search" aria-describedby="basic-addon2" name="rpPrice">
+                                   <input type="text" id="search_input" class="form-control bg-light border-0 small" placeholder="Enter Price" aria-label="Search" aria-describedby="basic-addon2" name="rpPrice" required="">
                                 
                             </div>
                             </div>
@@ -181,7 +181,7 @@
                             </div>
                             <p></p>
                           <div class="row " style="user-select: auto;justify-content: center;">
-                              <input type="submit" value="Add New Rate Plan" class="btn btn-primary btn-icon-split btn-lg" style="user-select: auto;justify-content: center;">
+                              <input type="submit" value="Add New Rate Plan" class="btn btn-primary btn-icon-split btn-lg" style="user-select: auto;justify-content: center;" >
                             </div>
                         
                     </form>
