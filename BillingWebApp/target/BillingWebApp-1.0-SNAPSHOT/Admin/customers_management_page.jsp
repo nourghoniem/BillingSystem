@@ -46,8 +46,10 @@
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Customers' Information</h6>
 
-                                <button type="button" style="position: relative; left: 1350px" class="btn btn-info" data-toggle="modal" data-target="#addProductModal">
+                                <button type="button" style="position: relative; /* left: 1350px; */ user-select: auto;/* right: 0%; */left: 85%;" class="btn btn-info" data-toggle="modal" data-target="#addProductModal">
                                     Add Customer
+
+                            </button>
 
                             </div>
 
