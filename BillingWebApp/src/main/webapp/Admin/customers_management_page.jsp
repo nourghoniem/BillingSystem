@@ -112,7 +112,7 @@
                                                 </div>
                                                 <div>
                                                     <label  style="position: relative; left: 11px" for="bill_cycle">Bill Cycle</label>
-                                                    <input type="date"  style="position: relative; left: 15px" required="" id="bill_cycle" min="<%=java.time.LocalDate.now()%>" value="<%=java.time.LocalDate.now()%>" name="bill_cycle"  placeholder="">
+                                                    <input type="date" class="form-control input-sm" style="position: relative; left: 15px" required="" id="bill_cycle" min="<%=java.time.LocalDate.now()%>" value="<%=java.time.LocalDate.now()%>" name="bill_cycle"  placeholder="">
                                                     <p id="billval" style="color: red; display:none;"></p>
                                                 </div>
                                                 <div>
