@@ -84,20 +84,7 @@
 
  <hr class="sidebar-divider">
 
- <div class="sidebar-heading">
-                   invoices
-                </div>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-fw fa-file-pdf-o"></i>
-                        <span>Display invoices </span></a>
-                </li>
-                <hr class="sidebar-divider">
-                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                       <i class="fas fa fa-sign-out"></i>
-                        <span>Log Out </span></a>
-                </li>
+ 
                 <!-- Divider -->
                
 
