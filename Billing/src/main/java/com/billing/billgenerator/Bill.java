@@ -29,7 +29,7 @@ public class Bill {
         GeneratePDF();
         UpdateBillCycle();
         ResetOneTimeFee();
-        //        RemoveFromBillTable();
+        RemoveFromBillTable();
         dbInstance.CommitTransaction();
     }
 
@@ -61,14 +61,14 @@ public class Bill {
         }
     }
 
-//    private void RemoveFromBillTable(){
-//        try {
-//            String removeFromBillTableSQLCommand = "delete from billing where msisdn = ?";
-//            PreparedStatement removeFromBillTableStatement = dbInstance.getPreparedStatement(removeFromBillTableSQLCommand);
-//            removeFromBillTableStatement.setString(1, msisdn);
-//            removeFromBillTableStatement.executeUpdate();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Bill.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+    private void RemoveFromBillTable() {
+        try {
+            String removeFromBillTableSQLCommand = "delete from billing where msisdn = ?";
+            PreparedStatement removeFromBillTableStatement = dbInstance.getPreparedStatement(removeFromBillTableSQLCommand);
+            removeFromBillTableStatement.setString(1, msisdn);
+            removeFromBillTableStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Bill.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
