@@ -17,6 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import mediation.database.DatabaseConnection;
 import mediation.model.CDR;
 
 /**
@@ -68,10 +69,10 @@ public class Main {
                         BufferedReader in = new BufferedReader(new FileReader(my_cdr));
                         String line;
                         while ((line = in.readLine()) != null) {
-                            columns = line.split(",");   
+                            columns = line.split(",");
                             int service_id = Integer.parseInt(columns[2]);
                             int rateplan_id = Integer.parseInt(columns[3]);
-                            int usage =  Integer.parseInt(columns[4]);
+                            int usage = Integer.parseInt(columns[4]);
                             LocalDate date = LocalDate.parse(columns[5]);
                             LocalTime time = LocalTime.parse(columns[6]);
                             time.truncatedTo(ChronoUnit.SECONDS);
@@ -91,6 +92,6 @@ public class Main {
                 }
             }
         }
-
+        DatabaseConnection.closeConnection();
     }
 }
