@@ -53,7 +53,7 @@ public class RatePlanHandler {
             PreparedStatement insServiceRP_stm = dbconnection.prepareStatement(insServiceRP_sql);
             insServiceRP_stm.setInt(1, ratePlanId);
             int[] servicePackageIds = ratePlan.getServicePackageIds();
-            for (int servicePackageId : servicePackageIds) {               
+            for (int servicePackageId : servicePackageIds) {
                 insServiceRP_stm.setInt(2, servicePackageId);
                 insServiceRP_stm.executeUpdate();
             }
@@ -93,7 +93,7 @@ public class RatePlanHandler {
     public RatePlan getNonRating(int rpid) {
         RatePlan rp = null;
         try {
-            String getRPs_sql = "SELECT n.* FROM \"public\".non_rating n,rateplan rp where rp.non_rating_id=n.id and rp.id=?";
+            String getRPs_sql = "SELECT id,name,price FROM \"public\".non_rating where id=? ";
 
             PreparedStatement getRPs_stm = dbconnection.prepareStatement(getRPs_sql);
             getRPs_stm.setInt(1, rpid);

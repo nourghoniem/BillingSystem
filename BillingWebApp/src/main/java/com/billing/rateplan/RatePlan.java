@@ -34,8 +34,8 @@ public class RatePlan {
         this.freeUnitId = freeUnitId;
         this.price = price;
         this.name = name;
-        this.nonrating = RatePlanHandler.getRatePlanHanlder().getNonRating(id);
-        this.freeUnits = ServicePackageHandler.getServicePackageHandler().getFreeService(id);
+        this.nonrating = RatePlanHandler.getRatePlanHanlder().getNonRating(nonRatingId);
+        this.freeUnits = ServicePackageHandler.getServicePackageHandler().getFreeService(freeUnitId);
     }
 
     public RatePlan(int id, int[] servicePackageIds, int nonRatingId, int freeUnitId, String name, int price) {
