@@ -44,7 +44,7 @@
                     <h2 class="title">Add RatePlan</h2>
                     <p></p>
                       <p></p>
-                    <form method="GET" onsubmit="valthisform()">
+                      <form method="GET" onsubmit="valthisform()" action="AddRatePlan">
                         <div class="row ">
                             <div class="col-4">
                                

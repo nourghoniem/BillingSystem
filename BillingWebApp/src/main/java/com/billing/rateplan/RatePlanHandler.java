@@ -51,10 +51,13 @@ public class RatePlanHandler {
 
             String insServiceRP_sql = "insert into service_rateplan values (?,?)";
             PreparedStatement insServiceRP_stm = dbconnection.prepareStatement(insServiceRP_sql);
-            int servicePackageId = ratePlan.getServicePackageId();
             insServiceRP_stm.setInt(1, ratePlanId);
-            insServiceRP_stm.setInt(2, servicePackageId);
-            insServiceRP_stm.executeUpdate();
+            int[] servicePackageIds = ratePlan.getServicePackageIds();
+            for (int servicePackageId : servicePackageIds) {               
+                insServiceRP_stm.setInt(2, servicePackageId);
+                insServiceRP_stm.executeUpdate();
+            }
+
             dbconnection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(RatePlanHandler.class.getName()).log(Level.SEVERE, null, ex);

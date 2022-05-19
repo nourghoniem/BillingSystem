@@ -12,6 +12,14 @@
         <servlet-name>GetCustomers</servlet-name>
         <servlet-class>com.billing.customers.GetCustomers</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddRatePlan</servlet-name>
+        <servlet-class>com.billing.servlets.AddRatePlanServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddServicePackageServlet</servlet-name>
+        <servlet-class>com.billing.servlets.AddServicePackageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddCustomer</servlet-name>
         <url-pattern>/AddCustomer</url-pattern>
@@ -19,6 +27,14 @@
     <servlet-mapping>
         <servlet-name>GetCustomers</servlet-name>
         <url-pattern>/GetCustomers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddRatePlan</servlet-name>
+        <url-pattern>/Admin/AddRatePlan</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddServicePackageServlet</servlet-name>
+        <url-pattern>/Admin/AddServicePackageServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

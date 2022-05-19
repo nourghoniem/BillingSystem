@@ -46,7 +46,7 @@
                     <h2 class="title">Add New Service Package</h2>
                     <p></p>
                       <p></p>
-                    <form method="GET">
+                      <form method="GET" action="AddServicePackageServlet">
                         <div class="row">
                                         <div class="col-sm-12 col-md-6">
                                             <div class="dataTables_length" ><label>Select Event Type <select id="evt" name="serviceId" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm" onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">

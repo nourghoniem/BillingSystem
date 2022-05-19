@@ -14,8 +14,9 @@ import java.util.ArrayList;
  */
 public class RatePlan {
 
-    private int id, servicePackageId, nonRatingId, freeUnitId, price, recurring, oneTime;
+    private int id, nonRatingId, freeUnitId, price, recurring, oneTime;
     private String name;
+    int[] servicePackageIds;
     private ArrayList<ServicePackage> sp = new ArrayList<ServicePackage>();
     private RatePlan nonrating;
     private ServicePackage freeUnits;
@@ -37,9 +38,9 @@ public class RatePlan {
         this.freeUnits = ServicePackageHandler.getServicePackageHandler().getFreeService(id);
     }
 
-    public RatePlan(int id, int servicePackageId, int nonRatingId, int freeUnitId, String name, int price) {
+    public RatePlan(int id, int[] servicePackageIds, int nonRatingId, int freeUnitId, String name, int price) {
         this.id = id;
-        this.servicePackageId = servicePackageId;
+        this.servicePackageIds = servicePackageIds;
         this.nonRatingId = nonRatingId;
         this.freeUnitId = freeUnitId;
         this.name = name;
@@ -47,8 +48,8 @@ public class RatePlan {
         this.sp.clear();
     }
 
-    public RatePlan(int servicePackageId, int nonRatingId, int freeUnitId, String name, int price) {
-        this.servicePackageId = servicePackageId;
+    public RatePlan(int[] servicePackageIds, int nonRatingId, int freeUnitId, String name, int price) {
+        this.servicePackageIds = servicePackageIds;
         this.nonRatingId = nonRatingId;
         this.freeUnitId = freeUnitId;
         this.name = name;
@@ -59,8 +60,8 @@ public class RatePlan {
         return id;
     }
 
-    public int getServicePackageId() {
-        return servicePackageId;
+    public int[] getServicePackageIds() {
+        return servicePackageIds;
     }
 
     public int getNonRatingId() {
@@ -83,8 +84,8 @@ public class RatePlan {
         this.id = id;
     }
 
-    public void setServicePackageId(int servicePackageId) {
-        this.servicePackageId = servicePackageId;
+    public void setServicePackageIds(int[] servicePackageIds) {
+        this.servicePackageIds = servicePackageIds;
     }
 
     public void setNonRatingId(int nonRatingId) {
