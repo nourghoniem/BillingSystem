@@ -16,29 +16,30 @@ import java.util.logging.Logger;
  * @author Michael Ramez
  */
 public class Bill {
+
     private final String msisdn;
     private final PDFGenerator pdfGenerator = PDFGenerator.getJasperReportsInstance();
     private final DB_Connection dbInstance = DB_Connection.getDatabaseInstance();
-    
+
     public Bill(String msisdn) {
         this.msisdn = msisdn;
     }
-    
-    public void GenerateBill(){
-        GeneratePDF();
-        
-    }
-    
-    private void GeneratePDF(){
 
-        pdfGenerator.Generate_PDF_Report(msisdn);        
+    public void GenerateBill() {
+        GeneratePDF();
         UpdateBillCycle();
         ResetOneTimeFee();
-//        RemoveFromBillTable();
+        //        RemoveFromBillTable();
         dbInstance.CommitTransaction();
     }
-    
-    private void UpdateBillCycle(){
+
+    private void GeneratePDF() {
+
+        pdfGenerator.Generate_PDF_Report(msisdn);
+
+    }
+
+    private void UpdateBillCycle() {
         try {
             String updateBillCycleSQLCommand = "update contract set bill_cycle = bill_cycle + INTERVAL '28 day' where msisdn = ?";
             PreparedStatement updateBillCycleStatement = dbInstance.getPreparedStatement(updateBillCycleSQLCommand);
@@ -48,8 +49,8 @@ public class Bill {
             Logger.getLogger(Bill.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void ResetOneTimeFee(){
+
+    private void ResetOneTimeFee() {
         try {
             String resetOneTimeFeeSQLCommand = "update contract set one_time = 0 where msisdn = ?";
             PreparedStatement resetOneTimeFeeStatement = dbInstance.getPreparedStatement(resetOneTimeFeeSQLCommand);
@@ -59,7 +60,7 @@ public class Bill {
             Logger.getLogger(Bill.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 //    private void RemoveFromBillTable(){
 //        try {
 //            String removeFromBillTableSQLCommand = "delete from billing where msisdn = ?";
