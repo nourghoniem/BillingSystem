@@ -29,7 +29,7 @@ public class Bill {
         GeneratePDF();
         UpdateBillCycle();
         ResetOneTimeFee();
-        //        RemoveFromBillTable();
+        RemoveFromBillTable();
         dbInstance.CommitTransaction();
     }
 
