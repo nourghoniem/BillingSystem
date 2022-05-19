@@ -4,9 +4,9 @@
  */
 package com.billing.billgenerator;
 
-import com.billing.jasperreports.PDFGenerator;
 import com.billing.postgresql.DB_Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,58 +16,32 @@ import java.util.logging.Logger;
  * @author Michael Ramez
  */
 public class BillGenerator {
-    private final String msisdn;
-    private final PDFGenerator pdfGenerator = PDFGenerator.getJasperReportsInstance();
-    private final DB_Connection dbInstance = DB_Connection.getDatabaseInstance();
-    
-    public BillGenerator(String msisdn) {
-        this.msisdn = msisdn;
-    }
-    
-    public void GenerateBill(){
-        GeneratePDF();
-        
-    }
-    
-    private void GeneratePDF(){
 
-        pdfGenerator.Generate_PDF_Report(msisdn);        
-        UpdateBillCycle();
-        ResetOneTimeFee();
-        RemoveFromBillTable();
-        dbInstance.CommitTransaction();
+    private final DB_Connection dbInstance = DB_Connection.getDatabaseInstance();
+    private static final BillGenerator billGeneratorInstance = new BillGenerator();
+    private final String getMsisdnsSQLCommand = "select msisdn from billing";
+
+    private BillGenerator() {
+
     }
-    
-    private void UpdateBillCycle(){
+
+    public static BillGenerator GetBillGeneratorInstance() {
+        return billGeneratorInstance;
+    }
+
+    public void GenerateBills() {
+
         try {
-            String updateBillCycleSQLCommand = "update contract set bill_cycle = bill_cycle + INTERVAL '28 day' where msisdn = ?";
-            PreparedStatement updateBillCycleStatement = dbInstance.getPreparedStatement(updateBillCycleSQLCommand);
-            updateBillCycleStatement.setString(1, msisdn);
-            updateBillCycleStatement.executeUpdate();
+            PreparedStatement getMsisdnsStatement = dbInstance.getPreparedStatement(getMsisdnsSQLCommand);
+            ResultSet resultSet = getMsisdnsStatement.executeQuery();
+            while (resultSet.next()) {
+                String msisdn = resultSet.getString("msisdn");
+                Bill bill = new Bill(msisdn);
+                bill.GenerateBill();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(BillGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    private void ResetOneTimeFee(){
-        try {
-            String resetOneTimeFeeSQLCommand = "update contract set one_time = 0 where msisdn = ?";
-            PreparedStatement resetOneTimeFeeStatement = dbInstance.getPreparedStatement(resetOneTimeFeeSQLCommand);
-            resetOneTimeFeeStatement.setString(1, msisdn);
-            resetOneTimeFeeStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(BillGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void RemoveFromBillTable(){
-        try {
-            String removeFromBillTableSQLCommand = "delete from billing where msisdn = ?";
-            PreparedStatement removeFromBillTableStatement = dbInstance.getPreparedStatement(removeFromBillTableSQLCommand);
-            removeFromBillTableStatement.setString(1, msisdn);
-            removeFromBillTableStatement.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(BillGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 }

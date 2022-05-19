@@ -30,7 +30,7 @@ public class PDFGenerator {
     private final Path BillingProjectPath = Paths.get(BillingProjectPathString);
     private final Path ParentProjectPath = BillingProjectPath.getParent();
     private final String compiledReportPath = BillingProjectPathString+"/Billing.jasper";
-    private final String outputPDF_BasePath = ParentProjectPath.toString()+"/Invoices";
+    private final String outputPDF_BasePath = ParentProjectPath.toString()+"/Invoices/";
 //    private final String compiledReportPath = "D:/VScode/Billing/Billing/Billing.jasper";
 //    private final String outputPDF_BasePath = "D:/VScode/Billing/Billing/";
     private final String generated_Bill_SQL_Command = "select billing.msisdn,rateplan.name as rateplanname, customer.name as customername,\n"

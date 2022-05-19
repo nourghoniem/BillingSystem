@@ -20,8 +20,8 @@ public class Main {
         DB_Connection dbInstance = DB_Connection.getDatabaseInstance();
         dbInstance.connectToDatabase();
         dbInstance.DisableAutoCommit();
-        String msisdn = "00201221234567";
-        BillGenerator generateBills = new BillGenerator(msisdn);
-        generateBills.GenerateBill();
+        BillGenerator billGenerator = BillGenerator.GetBillGeneratorInstance();
+        billGenerator.GenerateBills();
+        dbInstance.closeDatabaseConnection();
     }
 }
